@@ -25,3 +25,15 @@ class Recommendation(models.Model):
 
     def __str__(self):
         return f"{self.user.user.username} -> {self.ad.title} (Score: {self.score})"
+
+class AdSimulation(models.Model):
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    impressions = models.IntegerField(default=0)
+    clicks = models.IntegerField(default=0)
+    conversions = models.IntegerField(default=0)
+    ctr = models.FloatField(default=0.0)  # Click-Through Rate
+    conversion_rate = models.FloatField(default=0.0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Simulation for {self.ad.title} - {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}"
