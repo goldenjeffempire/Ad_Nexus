@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Recommendation, Ad, AdSimulation
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
+from .ai_tools import generate_creative_content
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -23,4 +24,15 @@ def ad_simulation(request, ad_id):
         'ad': ad,
         'simulation': simulation,
         'previous_simulations': previous_simulations,
+    })
+
+def ai_creativity_booster(request):
+    if request.method == "POST":
+        # Generate AI-powered content
+        generated_content = generate_creative_content()
+    else:
+        generated_content = None
+
+    return render(request, 'ads_nexus/ai_creativity_booster.html', {
+        'generated_content': generated_content
     })

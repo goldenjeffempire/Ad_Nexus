@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Creativity Booster</title>
+</head>
+<body>
+    <h1>AI Creativity Booster</h1>
+    <p>Generate creative and engaging content for your ad campaigns with ease.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Generate Content</button>
+    </form>
+
+    {% if generated_content %}
+        <h2>Generated Content</h2>
+        <ul>
+            <li><strong>Headline:</strong> {{ generated_content.headline }}</li>
+            <li><strong>Description:</strong> {{ generated_content.description }}</li>
+            <li><strong>Call to Action:</strong> {{ generated_content.call_to_action }}</li>
+        </ul>
+    {% endif %}
+</body>
+</html>
