@@ -37,3 +37,22 @@ class AdSimulation(models.Model):
 
     def __str__(self):
         return f"Simulation for {self.ad.title} - {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}"
+
+class SocialMediaPlatform(models.Model):
+    name = models.CharField(max_length=100)
+    api_url = models.URLField()
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class SocialMediaAccount(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    platform = models.ForeignKey(SocialMediaPlatform, on_delete=models.CASCADE)
+    username = models.CharField(max_length=100)
+    access_token = models.TextField()  # Token for API authentication
+    connected_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.username} on {self.platform.name}"
