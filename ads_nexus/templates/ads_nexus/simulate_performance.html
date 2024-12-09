@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Ad Campaign</title>
+    <title>Simulate Ad Performance</title>
 </head>
 <body>
-    <h1>Create a New Ad Campaign</h1>
+    <h1>Simulate Performance for Campaign: {{ campaign.name }}</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Next</button>
+        <button type="submit">Simulate</button>
     </form>
 </body>
-</html>a
+</html>

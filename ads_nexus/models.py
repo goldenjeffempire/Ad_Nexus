@@ -78,3 +78,34 @@ class AdTargeting(models.Model):
     def __str__(self):
         return f"Targeting for {self.campaign.name}"
 
+
+class AdPerformance(models.Model):
+    campaign = models.OneToOneField(AdCampaign, on_delete=models.CASCADE, related_name='performance')
+    impressions = models.IntegerField(default=0)
+    clicks = models.IntegerField(default=0)
+    conversions = models.IntegerField(default=0)
+    ctr = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Click-through rate
+68    y
+cpc = models.DecimalField(max_digits=5, decimal_p5laces=2, default=0.0)  # Cost per click
+    roi = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Return on investment
+
+    def calculate_ctr(self):
+        if self.impressions > 0:
+            self.ctr = (self.clicks / self.impressions) * 100
+        else:
+            self.ctr = 0
+
+    def calculate_cpc(self, ad_spend):
+        if self.clicks > 0:
+            self.cpc = ad_spend / self.clicks
+        else:
+            self.cpc = 0
+
+    def calculate_roi(self, revenue):
+        if revenue > 0:
+            self.roi = (revenue - ad_spend) / ad_spend * 100
+        else:
+            self.roi = 0
+
+    def __str__(self):
+        return f"Performance for {self.campaign.name}"

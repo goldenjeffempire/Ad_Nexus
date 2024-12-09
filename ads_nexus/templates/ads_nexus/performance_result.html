@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Performance Results</title>
+</head>
+<body>
+    <h1>Performance Results for Campaign: {{ performance.campaign.name }}</h1>
+    <p>Impressions: {{ performance.impressions }}</p>
+    <p>Clicks: {{ performance.clicks }}</p>
+    <p>CTR: {{ performance.ctr }}%</p>
+    <p>CPC: ${{ performance.cpc }}</p>
+    <p>ROI: {{ performance.roi }}%</p>
+</body>
+</html>

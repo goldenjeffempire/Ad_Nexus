@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdCampaign, AdPerformance
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
-from .forms import AdCampaignForm, AdTargetingForm
+from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm
 
+from django.shortcuts import render, get_object_or_404
+from .models import AdCampaign, AdPerformance
+from .forms import PerformanceSimulationForm
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -92,3 +95,24 @@ def set_ad_targeting(request, campaign_id):
         form = AdTargetingForm()
 
     return render(request, 'ads_nexus/set_ad_targeting.html', {'form': form, 'campaign': campaign})
+
+def simulate_performance(request, campaign_id):
+    campaign = get_object_or_404(AdCampaign, id=campaign_id)
+    if request.method == 'POST':
+        form = PerformanceSimulationForm(request.POST)
+        if form.is_valid():
+            ad_spend = form.cleaned_data['ad_spend']
+            revenue = form.cleaned_data['revenue']
+            performance, created = AdPerformance.objects.get_or_create(campaign=campaign)
+            performance.impressions = form.cleaned_data['impressions']
+            performance.clicks = form.cleaned_data['clicks']
+            performance.calculate_ctr()
+            performance.calculate_cpc(ad_spend)
+            performance.calculate_roi(revenue)
+            performance.save()
+
+            return render(request, 'ads_nexus/performance_result.html', {'performance': performance})
+    else:
+        form = PerformanceSimulationForm()
+
+    return render(request, 'ads_nexus/simulate_performance.html', {'form': form, 'campaign': campaign})
