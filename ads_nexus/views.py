@@ -9,6 +9,7 @@ from social_django.models import UserSocialAuth
 from .marketing_coach import get_marketing_advice
 from .recommendation import recommend
 from .performance_simulation import simulate_campaign_performance
+from .creativity_boost import boost_creativity
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -179,3 +180,8 @@ def performance_simulation(request):
 
     performance = simulate_campaign_performance(budget, audience_size, engagement_rate)
     return render(request, 'ads_nexus/performance_simulation.html', {'performance': performance})
+
+def creativity_boost(request):
+    ad_content = "Amazing product at a great price!"  # Example ad content
+    suggestion = boost_creativity(ad_content)
+    return render(request, 'ads_nexus/creativity_boost.html', {'suggestion': suggestion})
