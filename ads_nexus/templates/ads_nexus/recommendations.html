@@ -6,15 +6,25 @@
     <title>Recommended Ads</title>
 </head>
 <body>
-    <h1>Recommended Ads</h1>
-    <ul>
-        {% for recommendation in recommendations %}
-            <li>
-                <h2>{{ recommendation.ad.title }}</h2>
-                <p>{{ recommendation.ad.description }}</p>
-                <p><strong>Relevance Score:</strong> {{ recommendation.score }}</p>
-            </li>
-        {% endfor %}
-    </ul>
+    <header>
+        <h1>Personalized Ad Recommendations</h1>
+    </header>
+
+    <main>
+        <!-- Display Recommendations -->
+        {% if recommendations %}
+            <ul>
+                {% for recommendation in recommendations %}
+                    <li>
+                        <h2>{{ recommendation.ad.title }}</h2>
+                        <p>{{ recommendation.ad.description }}</p>
+                        <p><strong>Relevance Score:</strong> {{ recommendation.score }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No ads to display at the moment. Check back later for personalized recommendations!</p>
+        {% endif %}
+    </main>
 </body>
 </html>

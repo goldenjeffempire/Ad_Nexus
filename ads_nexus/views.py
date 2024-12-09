@@ -7,6 +7,7 @@ from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm, A
 from .ai_content_generator import generate_ad_copy
 from social_django.models import UserSocialAuth
 from .marketing_coach import get_marketing_advice
+from .recommendation import recommend
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -164,3 +165,8 @@ def marketing_coach(request):
     advice = get_marketing_advice(campaign_data)
 
     return render(request, 'ads_nexus/marketing_coach.html', {'advice': advice})
+
+def content_recommendation(request):
+    user_id = 'user1'  # Example user ID, this can be dynamically fetched
+    recommendations = recommend(user_id)
+    return render(request, 'ads_nexus/recommendations.html', {'recommendations': recommendations})
