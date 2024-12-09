@@ -213,3 +213,12 @@ def manage_campaigns(request):
             return render(request, 'ads_nexus/campaign_created.html', {'google_campaign': google_campaign})
 
     return render(request, 'ads_nexus/manage_campaigns.html')
+
+from django.shortcuts import render
+from .recommendation_engine import generate_content_recommendations
+
+def content_recommendations(request):
+    user_id = request.user.id  # Assuming user is logged in
+    recommended_ads = generate_content_recommendations(user_id)
+
+    return render(request, 'ads_nexus/content_recommendations.html', {'recommended_ads': recommended_ads})
