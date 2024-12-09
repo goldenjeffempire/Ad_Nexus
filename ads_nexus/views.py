@@ -14,7 +14,9 @@ from .chatbot import get_chatbot_response, AIChatbot
 from .facebook_integration import create_facebook_campaign
 from .google_ads_integration import create_google_ads_campaign
 from .facebook_ads import FacebookAdManager
-
+from .ai.content_recommendation import ContentRecommendationEngine
+from .ai.performance_simulation import PerformanceSimulation
+from .ai.creativity_booster import CreativityBooster
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -302,3 +304,45 @@ def create_facebook_ad(request):
             'ad_name': ad_name,
         })
     return render(request, 'ads_nexus/create_ad.html')
+
+# Example ad data (replace with real data from your database)
+ad_data = {
+    'ad_id': [1, 2, 3],
+    'budget': [100, 200, 150],
+    'targeting': [50, 60, 55],
+    'schedule': [30, 40, 35]
+}
+
+# Initialize AI tools
+content_rec_engine = ContentRecommendationEngine(ad_data)
+performance_simulator = PerformanceSimulation(ad_data)
+creativity_booster = CreativityBooster()
+
+def ai_tools_dashboard(request):
+    if request.method == 'POST':
+        user_preferences = [
+            request.POST['budget'],
+            request.POST['targeting'],
+            request.POST['schedule']
+        ]
+
+        # Get AI recommendations
+        recommended_ad = content_rec_engine.recommend_content(user_preferences)
+
+        # Simulate performance
+        performance_score = performance_simulator.simulate_performance(
+            request.POST['budget'],
+            request.POST['targeting'],
+            request.POST['schedule']
+        )
+
+        # Generate creative ad copy
+        ad_copy = creativity_booster.generate_ad_copy(request.POST['ad_copy_input'])
+
+        return render(request, 'ads_nexus/ai_dashboard_result.html', {
+            'recommended_ad': recommended_ad,
+            'performance_score': performance_score,
+            'ad_copy': ad_copy
+        })
+
+    return render(request, 'ads_nexus/ai_dashboard.html')

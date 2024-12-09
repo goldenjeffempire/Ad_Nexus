@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Dashboard - AD_NEXUS</title>
+</head>
+<body>
+    <h1>AI Tools Dashboard</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="budget">Budget:</label>
+        <input type="number" name="budget" required>
+        <br>
+        <label for="targeting">Targeting:</label>
+        <input type="number" name="targeting" required>
+        <br>
+        <label for="schedule">Schedule:</label>
+        <input type="number" name="schedule" required>
+        <br>
+        <label for="ad_copy_input">Ad Copy Input:</label>
+        <textarea name="ad_copy_input" required></textarea>
+        <br>
+        <button type="submit">Run AI Tools</button>
+    </form>
+</body>
+</html>
