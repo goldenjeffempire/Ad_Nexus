@@ -1,0 +1,14 @@
+.social-share-buttons {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.social-share-buttons h3 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.social-share-buttons .social-share {
+    margin: 5px;
+    display: inline-block;
+}

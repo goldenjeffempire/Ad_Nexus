@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Details - AD_NEXUS</title>
+</head>
+<body>
+    <h1>{{ ad.title }}</h1>
+    <p>{{ ad.description }}</p>
+    
+    <!-- Add Social Share buttons -->
+    <div class="social-share-buttons">
+        <h3>Share this Ad:</h3>
+        {% load social_share %}
+        {% social_share_buttons %}
+    </div>
+
+    <a href="/">Back to Ads</a>
+</body>
+</html>
