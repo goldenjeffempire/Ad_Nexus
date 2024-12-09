@@ -150,3 +150,13 @@ class AdCampaign(models.Model):
 
     def __str__(self):
         return f"Campaign: {self.name}"
+
+# Model for storing chat history
+class ChatHistory(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    message = models.TextField()
+    response = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Chat with {self.user.username} at {self.timestamp}"

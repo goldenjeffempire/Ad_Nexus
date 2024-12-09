@@ -10,7 +10,7 @@ from .marketing_coach import get_marketing_advice
 from .recommendation import recommend
 from .performance_simulation import simulate_ad_performance, simulate_campaign_performance
 from .creativity_boost import boost_creativity
-from .chatbot import get_chatbot_response, AIChatbot
+from .chatbot import get_chatbot_response, AIChatbot, log_conversation
 from .facebook_integration import create_facebook_campaign
 from .google_ads_integration import create_google_ads_campaign
 from .facebook_ads import FacebookAdManager
@@ -392,17 +392,28 @@ def analytics(request):
     analytics_data = SocialShareAnalytics.objects.all()
     return render(request, 'ads_nexus/analytics.html', {'analytics_data': analytics_data})
 
+@login_required
 @csrf_exempt
 def chatbot(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        user_message = data.get("message")
+        # If request is a standard POST (with form submission)
+        if request.is_ajax():
+            user_message = request.POST.get('message')
+        else:
+            # If request is in JSON format (API-based request)
+            data = json.loads(request.body)
+            user_message = data.get("message")
 
         if user_message:
-            # Get response from the chatbot
-            response_text = get_chatbot_response(user_message, request.user.id)
-            return JsonResponse({"reply": response_text})
+            # Get the chatbot's response based on the user message
+            chatbot_response = get_chatbot_response(user_message)
+
+            # Log the conversation to the database
+            log_conversation(request.user, user_message, chatbot_response)
+
+            # Return the response as JSON
+            return JsonResponse({"response": chatbot_response})
         else:
             return JsonResponse({"error": "No message provided"}, status=400)
 
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+    return render(request, 'chatbot.html')
