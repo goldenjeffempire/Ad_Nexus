@@ -10,6 +10,7 @@ from .marketing_coach import get_marketing_advice
 from .recommendation import recommend
 from .performance_simulation import simulate_campaign_performance
 from .creativity_boost import boost_creativity
+from .chatbot import get_chatbot_response
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -185,3 +186,12 @@ def creativity_boost(request):
     ad_content = "Amazing product at a great price!"  # Example ad content
     suggestion = boost_creativity(ad_content)
     return render(request, 'ads_nexus/creativity_boost.html', {'suggestion': suggestion})
+
+def chatbot_interaction(request):
+    user_input = request.GET.get('user_input', '')  # Get user input from GET request
+    if user_input:
+        response = get_chatbot_response(user_input)
+    else:
+        response = "Hi, I am your campaign assistant. How can I help you today?"
+
+    return render(request, 'ads_nexus/chatbot_interaction.html', {'response': response})
