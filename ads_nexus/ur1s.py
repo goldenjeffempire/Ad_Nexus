@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ad_recommendations, ad_simulation, ai_creativity_booster, social_media_dashboard, connect_social_media_account, create_ad_campaign, set_ad_targeting, generate_ad_content, chatbot_view
+from .views import ad_recommendations, ad_simulation, ai_creativity_booster, social_media_dashboard, connect_social_media_account, create_ad_campaign, set_ad_targeting, generate_ad_content, social_media_dashboard, chatbot_view
 
 urlpatterns = [
     path('recommendations/', ad_recommendations, name='ad_recommendations'),
