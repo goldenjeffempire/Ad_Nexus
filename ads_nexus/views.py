@@ -6,6 +6,7 @@ from .ai_tools import generate_creative_content
 from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm, AdContentForm, SchedulePostForm
 from .ai_content_generator import generate_ad_copy
 from social_django.models import UserSocialAuth
+from .marketing_coach import get_marketing_advice
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -156,3 +157,10 @@ def schedule_post(request):
         form = SchedulePostForm()
 
     return render(request, 'ads_nexus/schedule_post.html', {'form': form})
+
+def marketing_coach(request):
+    # Simulate campaign data
+    campaign_data = {'engagement_rate': 15}  # Example engagement rate
+    advice = get_marketing_advice(campaign_data)
+
+    return render(request, 'ads_nexus/marketing_coach.html', {'advice': advice})

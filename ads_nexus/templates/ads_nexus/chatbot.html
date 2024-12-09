@@ -3,18 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chatbot</title>
+    <title>AI Marketing Assistant</title>
+    <script>
+        // Initialize speech recognition
+        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+        // Function to start voice recognition
+        function startVoiceCommand() {
+            recognition.start();
+        }
+
+        // Handle speech recognition result
+        recognition.onresult = function(event) {
+            var transcript = event.results[0][0].transcript;
+            document.getElementById('voiceMessage').value = transcript;
+            document.forms['chatForm'].submit();
+        };
+    </script>
 </head>
 <body>
-    <h1>AI Marketing Assistant</h1>
-    <form method="POST">
+    <header>
+        <h1>AI Marketing Assistant</h1>
+    </header>
+
+    <!-- Chat Form -->
+    <form name="chatForm" method="POST">
         {% csrf_token %}
-        <input type="text" name="message" placeholder="Ask me anything about your campaigns" required>
+        <input 
+            type="text" 
+            id="voiceMessage" 
+            name="message" 
+            placeholder="Ask me anything about your campaigns" 
+            required>
         <button type="submit">Send</button>
+        <button type="button" onclick="startVoiceCommand()">🎙 Speak</button>
     </form>
-    {% if user_message %}
-        <h3>You: {{ user_message }}</h3>
-        <h3>Bot: {{ bot_response }}</h3>
+
+    <!-- Chat History -->
+    {% if user_message and bot_response %}
+        <section>
+            <h3><strong>You:</strong> {{ user_message }}</h3>
+            <h3><strong>Bot:</strong> {{ bot_response }}</h3>
+        </section>
+    {% else %}
+        <p>Ask a question to get started!</p>
     {% endif %}
 </body>
 </html>
