@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Performance Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .results p {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ad Performance Simulation Results</h1>
+
+    <div class="section">
+        <h2>Clicks Over Time</h2>
+        <img src="{{ clicks }}" alt="Click Performance Graph">
+    </div>
+
+    <div class="section">
+        <h2>Engagements Over Time</h2>
+        <img src="{{ engagements }}" alt="Engagement Performance Graph">
+    </div>
+
+    {% if performance %}
+    <div class="section">
+        <h2>Campaign Performance Results: {{ performance.campaign.name }}</h2>
+        <p><strong>Impressions:</strong> {{ performance.impressions }}</p>
+        <p><strong>Clicks:</strong> {{ performance.clicks }}</p>
+        <p><strong>CTR:</strong> {{ performance.ctr }}%</p>
+        <p><strong>CPC:</strong> ${{ performance.cpc }}</p>
+        <p><strong>ROI:</strong> {{ performance.roi }}%</p>
+    </div>
+    {% endif %}
+
+    <a href="/performance_simulation">Go Back</a>
+
+</body>
+</html>

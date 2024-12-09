@@ -8,7 +8,7 @@ from .ai_content_generator import generate_ad_copy
 from social_django.models import UserSocialAuth
 from .marketing_coach import get_marketing_advice
 from .recommendation import recommend
-from .performance_simulation import simulate_campaign_performance
+from .performance_simulation import simulate_ad_performance, simulate_campaign_performance
 from .creativity_boost import boost_creativity
 from .chatbot import get_chatbot_response
 from .facebook_integration import create_facebook_campaign
@@ -177,12 +177,33 @@ def content_recommendation(request):
     return render(request, 'ads_nexus/recommendations.html', {'recommendations': recommendations})
 
 def performance_simulation(request):
-    budget = 1000  # Example budget in USD
-    audience_size = 5000  # Example audience size
-    engagement_rate = 0.3  # Example engagement rate (30%)
+    """
+    Handles ad and campaign performance simulations based on user inputs or defaults.
+    """
+    if request.method == "POST":
+        # Fetch input data from the form
+        ad_spend = float(request.POST.get('ad_spend', 0))
+        ctr = float(request.POST.get('ctr', 0))
+        engagement_rate = float(request.POST.get('engagement_rate', 0))
+        budget = float(request.POST.get('budget', 1000))  # Default campaign budget
+        audience_size = int(request.POST.get('audience_size', 5000))  # Default audience size
 
-    performance = simulate_campaign_performance(budget, audience_size, engagement_rate)
-    return render(request, 'ads_nexus/performance_simulation.html', {'performance': performance})
+        # Run ad performance simulation
+        ad_performance = simulate_ad_performance(ad_spend, ctr, engagement_rate)
+        clicks, engagements = ad_performance['clicks'], ad_performance['engagements']
+
+        # Run campaign performance simulation
+        campaign_performance = simulate_campaign_performance(budget, audience_size, engagement_rate)
+
+        # Render results to the template
+        return render(request, 'ads_nexus/performance_simulation_results.html', {
+            'clicks': clicks,
+            'engagements': engagements,
+            'campaign_performance': campaign_performance,
+        })
+
+    # Render the input form page
+    return render(request, 'ads_nexus/performance_simulation.html')
 
 def creativity_boost(request):
     ad_content = "Amazing product at a great price!"  # Example ad content
@@ -213,9 +234,6 @@ def manage_campaigns(request):
             return render(request, 'ads_nexus/campaign_created.html', {'google_campaign': google_campaign})
 
     return render(request, 'ads_nexus/manage_campaigns.html')
-
-from django.shortcuts import render
-from .recommendation_engine import generate_content_recommendations
 
 def content_recommendations(request):
     user_id = request.user.id  # Assuming user is logged in
