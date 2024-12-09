@@ -3,11 +3,8 @@ from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, Social
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
-from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm
-
-from django.shortcuts import render, get_object_or_404
-from .models import AdCampaign, AdPerformance
-from .forms import PerformanceSimulationForm
+from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm, AdContentForm
+from .ai_content_generator import generate_ad_copy
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -116,3 +113,15 @@ def simulate_performance(request, campaign_id):
         form = PerformanceSimulationForm()
 
     return render(request, 'ads_nexus/simulate_performance.html', {'form': form, 'campaign': campaign})
+
+def generate_ad_content(request):
+    ad_copy = None
+    if request.method == 'POST':
+        form = AdContentForm(request.POST)
+        if form.is_valid():
+            campaign_description = form.cleaned_data['campaign_description']
+            ad_copy = generate_ad_copy(campaign_description)
+    else:
+        form = AdContentForm()
+
+    return render(request, 'ads_nexus/generate_ad_content.html', {'form': form, 'ad_copy': ad_copy})
