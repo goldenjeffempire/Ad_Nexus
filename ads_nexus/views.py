@@ -8,6 +8,7 @@ from .ai_content_generator import generate_ad_copy
 from social_django.models import UserSocialAuth
 from .marketing_coach import get_marketing_advice
 from .recommendation import recommend
+from .performance_simulation import simulate_campaign_performance
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -170,3 +171,11 @@ def content_recommendation(request):
     user_id = 'user1'  # Example user ID, this can be dynamically fetched
     recommendations = recommend(user_id)
     return render(request, 'ads_nexus/recommendations.html', {'recommendations': recommendations})
+
+def performance_simulation(request):
+    budget = 1000  # Example budget in USD
+    audience_size = 5000  # Example audience size
+    engagement_rate = 0.3  # Example engagement rate (30%)
+
+    performance = simulate_campaign_performance(budget, audience_size, engagement_rate)
+    return render(request, 'ads_nexus/performance_simulation.html', {'performance': performance})
