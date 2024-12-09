@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
+from .forms import AdCampaignForm, AdTargetingForm
+
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -62,3 +64,31 @@ def connect_social_media_account(request, platform_id):
         return redirect('social_media_dashboard')
 
     return render(request, 'ads_nexus/connect_social_media.html', {'platform': platform})
+
+def create_ad_campaign(request):
+    if request.method == 'POST':
+        form = AdCampaignForm(request.POST)
+        if form.is_valid():
+            campaign = form.save(commit=False)
+            campaign.user = request.user
+            campaign.save()
+            return redirect('set_ad_targeting', campaign_id=campaign.id)
+    else:
+        form = AdCampaignForm()
+
+    return render(request, 'ads_nexus/create_ad_campaign.html', {'form': form})
+
+
+def set_ad_targeting(request, campaign_id):
+    campaign = get_object_or_404(AdCampaign, id=campaign_id)
+    if request.method == 'POST':
+        form = AdTargetingForm(request.POST)
+        if form.is_valid():
+            targeting = form.save(commit=False)
+            targeting.campaign = campaign
+            targeting.save()
+            return redirect('campaign_dashboard')
+    else:
+        form = AdTargetingForm()
+
+    return render(request, 'ads_nexus/set_ad_targeting.html', {'form': form, 'campaign': campaign})
