@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdCampaign, AdPerformance, SocialShareAnalytics
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -22,6 +22,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .chatbot_handler import get_chatbot_response
 import json
+from .ad_targeting import dynamic_ad_targeting
+from django.contrib.auth.decorators import login_required
 
 
 def ad_recommendations(request):
@@ -83,15 +85,30 @@ def connect_social_media_account(request, platform_id):
 
     return render(request, 'ads_nexus/connect_social_media.html', {'platform': platform})
 
+@login_required
 def create_ad_campaign(request):
     if request.method == 'POST':
         form = AdCampaignForm(request.POST)
         if form.is_valid():
+            # Save the campaign without committing to the database yet
             campaign = form.save(commit=False)
-            campaign.user = request.user
-            campaign.save()
-            return redirect('set_ad_targeting', campaign_id=campaign.id)
+            campaign.user = request.user  # Associate the campaign with the logged-in user
+            campaign.save()  # Save the campaign
+
+            # Perform dynamic ad targeting based on the campaign details
+            targeted_users = dynamic_ad_targeting(campaign)
+
+            # Assuming you have a Many-to-Many field for users in the AdCampaign model
+            campaign.targeted_users.set(targeted_users)  # Set the targeted users
+
+            # Redirect to the success page or to the next step (like setting ads)
+            return redirect('campaign_success')  # Redirect to a page that shows campaign success
+        else:
+            # Handle form errors
+            return render(request, 'ads_nexus/create_ad_campaign.html', {'form': form})
+
     else:
+        # Display an empty form for GET requests
         form = AdCampaignForm()
 
     return render(request, 'ads_nexus/create_ad_campaign.html', {'form': form})

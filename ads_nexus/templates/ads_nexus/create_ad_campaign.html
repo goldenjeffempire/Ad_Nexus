@@ -6,11 +6,34 @@
     <title>Create Ad Campaign</title>
 </head>
 <body>
-    <h1>Create a New Ad Campaign</h1>
+    <h1>Create New Ad Campaign</h1>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Next</button>
+        <label for="campaign_name">Campaign Name:</label>
+        <input type="text" name="campaign_name" id="campaign_name" required><br>
+
+        <label for="target_age_range">Target Age Range (e.g., 18-35):</label>
+        <input type="text" name="target_age_range" id="target_age_range"><br>
+
+        <label for="target_gender">Target Gender:</label>
+        <input type="text" name="target_gender" id="target_gender"><br>
+
+        <label for="target_location">Target Location:</label>
+        <input type="text" name="target_location" id="target_location"><br>
+
+        <label for="target_interests">Target Interests (comma separated):</label>
+        <input type="text" name="target_interests" id="target_interests"><br>
+
+        <label for="budget">Budget:</label>
+        <input type="text" name="budget" id="budget"><br>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" id="start_date"><br>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date" id="end_date"><br>
+
+        <button type="submit">Create Campaign</button>
     </form>
 </body>
-</html>a
+</html>

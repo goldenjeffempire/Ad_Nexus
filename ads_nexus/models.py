@@ -117,3 +117,36 @@ class SocialShareAnalytics(models.Model):
 
     def __str__(self):
         return f'{self.ad.title} shared on {self.platform}'
+
+# Model to store user demographic data for targeting
+class UserDemographics(models.Model):
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    age = models.IntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=10, null=True, blank=True)
+    location = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Demographics"
+
+# Model for user interests and behaviors
+class UserBehavior(models.Model):
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    interests = models.JSONField(default=list)  # Store interests as a list of strings
+    past_ad_interactions = models.JSONField(default=list)  # Store interaction data as JSON
+
+    def __str__(self):
+        return f"{self.user.username}'s Behaviors"
+
+# Model for Ad Campaign targeting configuration
+class AdCampaign(models.Model):
+    name = models.CharField(max_length=255)
+    target_age_range = models.CharField(max_length=50, null=True, blank=True)
+    target_gender = models.CharField(max_length=10, null=True, blank=True)
+    target_location = models.CharField(max_length=100, null=True, blank=True)
+    target_interests = models.JSONField(default=list)
+    budget = models.DecimalField(max_digits=10, decimal_places=2)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    def __str__(self):
+        return f"Campaign: {self.name}"
