@@ -18,6 +18,10 @@ from .ai.content_recommendation import ContentRecommendationEngine
 from .ai.performance_simulation import PerformanceSimulation
 from .ai.creativity_booster import CreativityBooster
 from .recommendations import recommend_ads
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .chatbot_handler import get_chatbot_response
+import json
 
 
 def ad_recommendations(request):
@@ -370,3 +374,18 @@ def ad_detail(request, ad_id):
 def analytics(request):
     analytics_data = SocialShareAnalytics.objects.all()
     return render(request, 'ads_nexus/analytics.html', {'analytics_data': analytics_data})
+
+@csrf_exempt
+def chatbot(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user_message = data.get("message")
+
+        if user_message:
+            # Get response from the chatbot
+            response_text = get_chatbot_response(user_message, request.user.id)
+            return JsonResponse({"reply": response_text})
+        else:
+            return JsonResponse({"error": "No message provided"}, status=400)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)

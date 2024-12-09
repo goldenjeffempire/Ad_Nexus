@@ -25,4 +25,5 @@ urlpatterns = [
     path('ai-tools-dashboard/', ai_tools_dashboard, name='ai_tools_dashboard'),
     path('ad/<int:ad_id>/', views.ad_detail, name='ad_detail'),
     path('analytics/', views.analytics, name='analytics'),
+    path('chatbot/', views.chatbot, name='chatbot'),
 ]

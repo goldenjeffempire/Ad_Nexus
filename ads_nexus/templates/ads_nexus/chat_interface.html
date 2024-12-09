@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot - AD_NEXUS</title>
+    <style>
+        .chat-box { max-height: 500px; overflow-y: scroll; }
+        .chat-message { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="chat-box" id="chatBox">
+        <!-- Display chat messages here -->
+    </div>
+    <input type="text" id="userMessage" placeholder="Ask me anything..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        function sendMessage() {
+            let userMessage = document.getElementById('userMessage').value;
+            if (userMessage.trim() !== "") {
+                let chatBox = document.getElementById('chatBox');
+                let userMessageDiv = document.createElement('div');
+                userMessageDiv.classList.add('chat-message');
+                userMessageDiv.textContent = "You: " + userMessage;
+                chatBox.appendChild(userMessageDiv);
+
+                // Send message to backend
+                fetch('/chatbot/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 'message': userMessage })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let botMessageDiv = document.createElement('div');
+                    botMessageDiv.classList.add('chat-message');
+                    botMessageDiv.textContent = "Bot: " + data.reply;
+                    chatBox.appendChild(botMessageDiv);
+                });
+
+                // Clear input field
+                document.getElementById('userMessage').value = "";
+            }
+        }
+    </script>
+</body>
+</html>
