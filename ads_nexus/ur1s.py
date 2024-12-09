@@ -9,4 +9,5 @@ urlpatterns = [
     path('social-media/connect/<int:platform_id>/', connect_social_media_account, name='connect_social_media_account'),
     path('campaigns/create/', create_ad_campaign, name='create_ad_campaign'),
     path('campaigns/<int:campaign_id>/targeting/', set_ad_targeting, name='set_ad_targeting'),
+    path('campaigns/<int:campaign_id>/simulate/', simulate_performance, name='simulate_performance'),
 ]
