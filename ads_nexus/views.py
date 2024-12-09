@@ -11,6 +11,8 @@ from .recommendation import recommend
 from .performance_simulation import simulate_campaign_performance
 from .creativity_boost import boost_creativity
 from .chatbot import get_chatbot_response
+from .facebook_integration import create_facebook_campaign
+from .google_ads_integration import create_google_ads_campaign
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -195,3 +197,19 @@ def chatbot_interaction(request):
         response = "Hi, I am your campaign assistant. How can I help you today?"
 
     return render(request, 'ads_nexus/chatbot_interaction.html', {'response': response})
+
+def manage_campaigns(request):
+    if request.method == 'POST':
+        platform = request.POST.get('platform')
+        campaign_name = request.POST.get('campaign_name')
+        budget = float(request.POST.get('budget'))
+
+        if platform == 'Facebook':
+            campaign = create_facebook_campaign(campaign_name, 'CONVERSIONS', 'PAUSED')
+            return render(request, 'ads_nexus/campaign_created.html', {'campaign': campaign})
+
+        elif platform == 'Google Ads':
+            google_campaign = create_google_ads_campaign('your_customer_id', campaign_name, budget)
+            return render(request, 'ads_nexus/campaign_created.html', {'google_campaign': google_campaign})
+
+    return render(request, 'ads_nexus/manage_campaigns.html')
