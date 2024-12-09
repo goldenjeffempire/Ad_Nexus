@@ -6,22 +6,39 @@
     <title>Social Media Dashboard</title>
 </head>
 <body>
-    <h1>Social Media Dashboard</h1>
-    <h2>Connected Accounts</h2>
-    <ul>
-        {% for account in accounts %}
-            <li>{{ account.username }} on {{ account.platform.name }}</li>
-        {% endfor %}
-    </ul>
+    <header>
+        <h1>Social Media Dashboard</h1>
+    </header>
 
-    <h2>Connect a New Account</h2>
-    <ul>
-        {% for platform in platforms %}
-            <li>
-                {{ platform.name }} - 
-                <a href="{% url 'connect_social_media_account' platform.id %}">Connect</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <!-- Section for displaying connected accounts -->
+    <section>
+        <h2>Your Connected Social Media Accounts</h2>
+        {% if accounts %}
+            <ul>
+                {% for account in accounts %}
+                    <li>{{ account.username }} on {{ account.platform.name }} - Connected</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No social media accounts connected. Please authenticate with a platform.</p>
+        {% endif %}
+    </section>
+
+    <!-- Section for connecting new accounts -->
+    <section>
+        <h2>Connect a New Account</h2>
+        {% if platforms %}
+            <ul>
+                {% for platform in platforms %}
+                    <li>
+                        {{ platform.name }} - 
+                        <a href="{% url 'connect_social_media_account' platform.id %}">Connect</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No platforms available for connection.</p>
+        {% endif %}
+    </section>
 </body>
 </html>

@@ -20,3 +20,10 @@ class PerformanceSimulationForm(forms.Form):
 
 class AdContentForm(forms.Form):
     campaign_description = forms.CharField(widget=forms.Textarea, label="Campaign Description", required=True)
+
+from django import forms
+
+class SchedulePostForm(forms.Form):
+    title = forms.CharField(max_length=100)
+    content = forms.CharField(widget=forms.Textarea)
+    schedule_time = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))

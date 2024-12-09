@@ -11,4 +11,5 @@ urlpatterns = [
     path('campaigns/<int:campaign_id>/targeting/', set_ad_targeting, name='set_ad_targeting'),
     path('campaigns/<int:campaign_id>/simulate/', simulate_performance, name='simulate_performance'),
     path('generate-ad-content/', generate_ad_content, name='generate_ad_content'),
+    path('social-media-dashboard/', social_media_dashboard, name='social_media_dashboard'),
 ]

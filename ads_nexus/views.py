@@ -3,8 +3,9 @@ from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, Social
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
-from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm, AdContentForm
+from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm, AdContentForm, SchedulePostForm
 from .ai_content_generator import generate_ad_copy
+from social_django.models import UserSocialAuth
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -125,3 +126,33 @@ def generate_ad_content(request):
         form = AdContentForm()
 
     return render(request, 'ads_nexus/generate_ad_content.html', {'form': form, 'ad_copy': ad_copy})
+
+def social_media_dashboard(request):
+    if request.user.is_authenticated:
+        social_accounts = UserSocialAuth.objects.filter(user=request.user)
+        return render(request, 'ads_nexus/social_media_dashboard.html', {'social_accounts': social_accounts})
+    else:
+        return render(request, 'ads_nexus/login.html')
+
+def engagement_insights(request):
+    if request.user.is_authenticated:
+        # Simulated insights
+        posts = [
+            {"title": "Ad Campaign 1", "likes": 150, "comments": 32},
+            {"title": "Ad Campaign 2", "likes": 240, "comments": 45},
+        ]
+        return render(request, 'ads_nexus/engagement_insights.html', {'posts': posts})
+    else:
+        return render(request, 'ads_nexus/login.html')
+
+def schedule_post(request):
+    if request.method == 'POST':
+        form = SchedulePostForm(request.POST)
+        if form.is_valid():
+            # Simulate scheduling the post
+            # Here, add your logic to schedule the post
+            return render(request, 'ads_nexus/schedule_post_confirmation.html', {'form': form})
+    else:
+        form = SchedulePostForm()
+
+    return render(request, 'ads_nexus/schedule_post.html', {'form': form})
