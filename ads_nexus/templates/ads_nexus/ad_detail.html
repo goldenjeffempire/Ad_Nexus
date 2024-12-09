@@ -9,13 +9,26 @@
     <h1>{{ ad.title }}</h1>
     <p>{{ ad.description }}</p>
     
-    <!-- Add Social Share buttons -->
+    <!-- Social Share Buttons Section -->
     <div class="social-share-buttons">
         <h3>Share this Ad:</h3>
         {% load social_share %}
         {% social_share_buttons %}
     </div>
 
+    <!-- Recommended Ads Section -->
+    <div class="recommended-ads">
+        <h3>Recommended Ads for You:</h3>
+        <ul>
+            {% for recommended_ad in recommended_ads %}
+                <li>
+                    <a href="{% url 'ad_detail' recommended_ad.id %}">{{ recommended_ad.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Back to Ads Link -->
     <a href="/">Back to Ads</a>
 </body>
 </html>

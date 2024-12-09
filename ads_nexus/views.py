@@ -17,6 +17,8 @@ from .facebook_ads import FacebookAdManager
 from .ai.content_recommendation import ContentRecommendationEngine
 from .ai.performance_simulation import PerformanceSimulation
 from .ai.creativity_booster import CreativityBooster
+from .recommendations import recommend_ads
+
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -357,7 +359,13 @@ def ad_detail(request, ad_id):
         share_analytics.share_count += 1
         share_analytics.save()
 
-    return render(request, 'ads_nexus/ad_detail.html', {'ad': ad})
+    # Get AI-powered ad recommendations for the user
+    recommended_ads = recommend_ads(request.user.id)
+
+    return render(request, 'ads_nexus/ad_detail.html', {
+        'ad': ad,
+        'recommended_ads': recommended_ads
+    })
 
 def analytics(request):
     analytics_data = SocialShareAnalytics.objects.all()
