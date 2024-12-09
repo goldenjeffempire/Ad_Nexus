@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ad_recommendations, ad_simulation, ai_creativity_booster, social_media_dashboard, connect_social_media_account, create_ad_campaign, set_ad_targeting, generate_ad_content, social_media_dashboard, chatbot_view, marketing_coach, content_recommendation, performance_simulation, creativity_boost, chatbot_interaction, manage_campaigns, content_recommendations
+from .views import ad_recommendations, ad_simulation, ai_creativity_booster, social_media_dashboard, connect_social_media_account, create_ad_campaign, set_ad_targeting, generate_ad_content, social_media_dashboard, chatbot_view, marketing_coach, content_recommendation, performance_simulation, creativity_boost, chatbot_interaction, manage_campaigns, content_recommendations, create_facebook_ad
 
 urlpatterns = [
     path('recommendations/', ad_recommendations, name='ad_recommendations'),
@@ -21,4 +21,5 @@ urlpatterns = [
     path('manage_campaigns/', manage_campaigns, name='manage_campaigns'),
     path('content_recommendations/', content_recommendations, name='content_recommendations'),
     path('chatbot/', chatbot_interface, name='chatbot_interface'),
+    path('create-ad/', create_facebook_ad, name='create_facebook_ad'),
 ]

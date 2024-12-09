@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Ad - AD_NEXUS</title>
+</head>
+<body>
+    <h1>Create Facebook Ad</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="campaign_name">Campaign Name:</label>
+        <input type="text" name="campaign_name" required>
+        <br>
+        <label for="adset_name">Ad Set Name:</label>
+        <input type="text" name="adset_name" required>
+        <br>
+        <label for="ad_name">Ad Name:</label>
+        <input type="text" name="ad_name" required>
+        <br>
+        <label for="targeting">Targeting (JSON format):</label>
+        <textarea name="targeting" required></textarea>
+        <br>
+        <label for="daily_budget">Daily Budget:</label>
+        <input type="number" name="daily_budget" required>
+        <br>
+        <label for="start_time">Start Time:</label>
+        <input type="datetime-local" name="start_time" required>
+        <br>
+        <label for="end_time">End Time:</label>
+        <input type="datetime-local" name="end_time" required>
+        <br>
+        <button type="submit">Create Ad</button>
+    </form>
+</body>
+</html>

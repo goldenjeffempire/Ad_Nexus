@@ -13,6 +13,8 @@ from .creativity_boost import boost_creativity
 from .chatbot import get_chatbot_response, AIChatbot
 from .facebook_integration import create_facebook_campaign
 from .google_ads_integration import create_google_ads_campaign
+from .facebook_ads import FacebookAdManager
+
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -256,3 +258,47 @@ def chatbot_interface(request):
         'user_message': user_message,
         'chatbot_response': chatbot_response
     })
+
+# Example access token and ad account ID (replace with actual values)
+ACCESS_TOKEN = 'your_facebook_access_token'
+AD_ACCOUNT_ID = 'your_ad_account_id'
+
+# Initialize Facebook Ad Manager
+fb_ad_manager = FacebookAdManager(ACCESS_TOKEN, AD_ACCOUNT_ID)
+
+def create_facebook_ad(request):
+    if request.method == 'POST':
+        campaign_name = request.POST['campaign_name']
+        adset_name = request.POST['adset_name']
+        ad_name = request.POST['ad_name']
+        targeting = request.POST['targeting']
+        daily_budget = request.POST['daily_budget']
+        start_time = request.POST['start_time']
+        end_time = request.POST['end_time']
+
+        # Create Campaign
+        campaign = fb_ad_manager.create_campaign(campaign_name, 'CONVERSIONS')
+
+        # Create Ad Set
+        adset = fb_ad_manager.create_adset(
+            campaign.get_id(),
+            adset_name,
+            targeting,
+            daily_budget,
+            start_time,
+            end_time
+        )
+
+        # Assuming a pre-created creative ID for simplicity
+        creative_id = 'your_creative_id'
+
+        # Create Ad
+        ad = fb_ad_manager.create_ad(adset.get_id(), ad_name, creative_id)
+
+        return render(request, 'ads_nexus/ad_created.html', {
+            'ad_id': ad.get_id(),
+            'campaign_name': campaign_name,
+            'adset_name': adset_name,
+            'ad_name': ad_name,
+        })
+    return render(request, 'ads_nexus/create_ad.html')
