@@ -20,4 +20,5 @@ urlpatterns = [
     path('chatbot/', chatbot_interaction, name='chatbot_interaction'),
     path('manage_campaigns/', manage_campaigns, name='manage_campaigns'),
     path('content_recommendations/', content_recommendations, name='content_recommendations'),
+    path('chatbot/', chatbot_interface, name='chatbot_interface'),
 ]

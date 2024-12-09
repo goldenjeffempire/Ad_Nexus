@@ -10,7 +10,7 @@ from .marketing_coach import get_marketing_advice
 from .recommendation import recommend
 from .performance_simulation import simulate_ad_performance, simulate_campaign_performance
 from .creativity_boost import boost_creativity
-from .chatbot import get_chatbot_response
+from .chatbot import get_chatbot_response, AIChatbot
 from .facebook_integration import create_facebook_campaign
 from .google_ads_integration import create_google_ads_campaign
 
@@ -240,3 +240,19 @@ def content_recommendations(request):
     recommended_ads = generate_content_recommendations(user_id)
 
     return render(request, 'ads_nexus/content_recommendations.html', {'recommended_ads': recommended_ads})
+
+# Initialize the AI Chatbot
+chatbot = AIChatbot()
+
+def chatbot_interface(request):
+    user_message = ''
+    chatbot_response = ''
+
+    if request.method == "POST":
+        user_message = request.POST['user_message']
+        chatbot_response = chatbot.get_response(user_message)
+
+    return render(request, 'ads_nexus/chatbot_interface.html', {
+        'user_message': user_message,
+        'chatbot_response': chatbot_response
+    })

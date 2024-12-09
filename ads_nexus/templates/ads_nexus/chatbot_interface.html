@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot - AD_NEXUS</title>
+    <style>
+        .chat-box {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 400px;
+            overflow-y: scroll;
+        }
+        .chat-message {
+            margin-bottom: 10px;
+        }
+        .user-message {
+            color: blue;
+        }
+        .chatbot-message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>AD_NEXUS AI Chatbot</h1>
+    <div class="chat-box">
+        <div class="chat-message user-message">
+            <strong>User:</strong> {{ user_message }}
+        </div>
+        <div class="chat-message chatbot-message">
+            <strong>Chatbot:</strong> {{ chatbot_response }}
+        </div>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="user_message" placeholder="Ask me something..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <a href="/">Go Back</a>
+</body>
+</html>
