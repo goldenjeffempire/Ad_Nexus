@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - AD_NEXUS</title>
+</head>
+<body>
+    <h1>Social Media Share Analytics</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Ad Title</th>
+                <th>Platform</th>
+                <th>Share Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in analytics_data %}
+                <tr>
+                    <td>{{ data.ad.title }}</td>
+                    <td>{{ data.platform }}</td>
+                    <td>{{ data.share_count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

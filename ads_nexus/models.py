@@ -109,3 +109,11 @@ cpc = models.DecimalField(max_digits=5, decimal_p5laces=2, default=0.0)  # Cost 
 
     def __str__(self):
         return f"Performance for {self.campaign.name}"
+
+class SocialShareAnalytics(models.Model):
+    ad = models.ForeignKey('Ad', on_delete=models.CASCADE)
+    platform = models.CharField(max_length=50)
+    share_count = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.ad.title} shared on {self.platform}'

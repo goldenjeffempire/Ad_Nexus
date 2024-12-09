@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdCampaign, AdPerformance
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdCampaign, AdPerformance, SocialShareAnalytics
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -346,3 +346,19 @@ def ai_tools_dashboard(request):
         })
 
     return render(request, 'ads_nexus/ai_dashboard.html')
+
+def ad_detail(request, ad_id):
+    ad = Ad.objects.get(id=ad_id)
+
+    # Track social shares
+    if request.GET.get('platform'):
+        platform = request.GET['platform']
+        share_analytics, created = SocialShareAnalytics.objects.get_or_create(ad=ad, platform=platform)
+        share_analytics.share_count += 1
+        share_analytics.save()
+
+    return render(request, 'ads_nexus/ad_detail.html', {'ad': ad})
+
+def analytics(request):
+    analytics_data = SocialShareAnalytics.objects.all()
+    return render(request, 'ads_nexus/analytics.html', {'analytics_data': analytics_data})
