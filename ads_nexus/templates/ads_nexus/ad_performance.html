@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Campaign Performance</title>
+</head>
+<body>
+    <h1>Performance for "{{ ad_campaign.title }}"</h1>
+    <p><strong>Description:</strong> {{ ad_campaign.description }}</p>
+    <p><strong>Budget:</strong> ${{ ad_campaign.budget }}</p>
+    <p><strong>Start Date:</strong> {{ ad_campaign.start_date }}</p>
+    <p><strong>End Date:</strong> {{ ad_campaign.end_date }}</p>
+
+    <h2>Performance Metrics</h2>
+    <ul>
+        <li><strong>Engagement Rate:</strong> {{ ad_performance.engagement_rate }}%</li>
+        <li><strong>Estimated Impressions:</strong> {{ ad_performance.estimated_impressions }}</li>
+        <li><strong>Clicks:</strong> {{ ad_performance.clicks }}</li>
+    </ul>
+
+    <p><a href="/">Back to Dashboard</a></p>
+</body>
+</html>

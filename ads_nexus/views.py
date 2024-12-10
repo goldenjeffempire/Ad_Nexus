@@ -24,6 +24,7 @@ from .chatbot_handler import get_chatbot_response
 import json
 from .ad_targeting import dynamic_ad_targeting
 from django.contrib.auth.decorators import login_required
+from .performance_simulator import simulate_ad_performance
 
 
 def ad_recommendations(request):
@@ -417,3 +418,14 @@ def chatbot(request):
             return JsonResponse({"error": "No message provided"}, status=400)
 
     return render(request, 'chatbot.html')
+
+def ad_performance(request, campaign_id):
+    ad_campaign = get_object_or_404(AdCampaign, id=campaign_id)
+
+    # Simulate performance data (this could be triggered periodically in production)
+    ad_performance = simulate_ad_performance(ad_campaign)
+
+    return render(request, 'ad_performance.html', {
+        'ad_campaign': ad_campaign,
+        'ad_performance': ad_performance
+    })
