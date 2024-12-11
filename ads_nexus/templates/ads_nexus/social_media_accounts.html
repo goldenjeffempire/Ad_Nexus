@@ -1,0 +1,9 @@
+<h1>Your Social Media Accounts</h1>
+<ul>
+    {% for account in accounts %}
+        <li>{{ account.platform_name }}: {{ account.account_name }} 
+            - <a href="{% url 'view_engagement_insights' account.id %}">View Insights</a> | 
+              <a href="{% url 'schedule_post' account.id %}">Schedule Post</a>
+        </li>
+    {% endfor %}
+</ul>

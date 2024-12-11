@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audience Engagement Insights</title>
+    <title>Audience Engagement Insights for {{ account.account_name }}</title>
 </head>
 <body>
-    <h1>Audience Engagement Insights</h1>
-    <table>
+    <h1>Engagement Insights for {{ account.account_name }}</h1>
+
+    <h2>Overall Insights</h2>
+    <ul>
+        {% for insight in insights %}
+            <li>Date: {{ insight.date }} - Likes: {{ insight.likes }} - Comments: {{ insight.comments }} - Shares: {{ insight.shares }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Post-Level Engagement</h2>
+    <table border="1">
         <thead>
             <tr>
                 <th>Post Title</th>
@@ -16,13 +25,13 @@
             </tr>
         </thead>
         <tbody>
-        {% for post in posts %}
-            <tr>
-                <td>{{ post.title }}</td>
-                <td>{{ post.likes }}</td>
-                <td>{{ post.comments }}</td>
-            </tr>
-        {% endfor %}
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.likes }}</td>
+                    <td>{{ post.comments }}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 </body>

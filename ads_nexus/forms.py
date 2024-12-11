@@ -1,5 +1,5 @@
 from django import forms
-from .models import AdCampaign, AdTargeting
+from .models import AdCampaign, AdTargeting, SocialMediaAccount, ScheduledPost
 
 class AdCampaignForm(forms.ModelForm):
     class Meta:
@@ -27,3 +27,13 @@ class SchedulePostForm(forms.Form):
     title = forms.CharField(max_length=100)
     content = forms.CharField(widget=forms.Textarea)
     schedule_time = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
+
+class SocialMediaAccountForm(forms.ModelForm):
+    class Meta:
+        model = SocialMediaAccount
+        fields = ['platform_name', 'account_name', 'access_token']
+
+class ScheduledPostForm(forms.ModelForm):
+    class Meta:
+        model = ScheduledPost
+        fields = ['social_media_account', 'post_content', 'scheduled_time', 'status']

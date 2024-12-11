@@ -30,4 +30,9 @@ urlpatterns = [
     path('manage_ad_campaign/<int:campaign_id>/', views.manage_ad_campaign, name='manage_ad_campaign'),
     path('chatbot/', views.chatbot_view, name='chatbot'),
     path('get_chatbot_response/', views.get_chatbot_response_view, name='get_chatbot_response'),
+    path('link_social_media_account/', views.link_social_media_account, name='link_social_media_account'),
+    path('social_media_accounts/', views.social_media_accounts, name='social_media_accounts'),
+    path('engagement_insights/<int:account_id>/', views.view_engagement_insights, name='view_engagement_insights'),
+    path('schedule_post/<int:account_id>/', views.schedule_post, name='schedule_post'),
 ]
+

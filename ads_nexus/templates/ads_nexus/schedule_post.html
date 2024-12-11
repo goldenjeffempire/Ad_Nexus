@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule a Post</title>
+    <title>Schedule Post for {{ account.account_name }}</title>
 </head>
 <body>
-    <h1>Schedule a New Post</h1>
+    <h1>Schedule a New Post for {{ account.account_name }}</h1>
+
+    <h2>Schedule Post</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}

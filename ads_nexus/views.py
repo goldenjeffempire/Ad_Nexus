@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
-from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm, AdContentForm, SchedulePostForm
+from .forms import AdCampaignForm, AdTargetingForm, PerformanceSimulationForm, AdContentForm, SchedulePostForm, SocialMediaAccountForm
 from .ai_content_generator import generate_ad_copy
 from social_django.models import UserSocialAuth
 from .marketing_coach import get_marketing_advice
@@ -455,3 +455,33 @@ def manage_ad_campaign(request, campaign_id):
         'ad_campaign': ad_campaign,
         'platforms': platforms
     })
+
+def link_social_media_account(request):
+    if request.method == 'POST':
+        form = SocialMediaAccountForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('social_media_accounts')
+    else:
+        form = SocialMediaAccountForm()
+    return render(request, 'link_social_media_account.html', {'form': form})
+
+def social_media_accounts(request):
+    accounts = SocialMediaAccount.objects.filter(user=request.user)
+    return render(request, 'social_media_accounts.html', {'accounts': accounts})
+
+def view_engagement_insights(request, account_id):
+    account = SocialMediaAccount.objects.get(id=account_id)
+    insights = EngagementInsight.objects.filter(social_media_account=account)
+    return render(request, 'engagement_insights.html', {'account': account, 'insights': insights})
+
+def schedule_post(request, account_id):
+    account = SocialMediaAccount.objects.get(id=account_id)
+    if request.method == 'POST':
+        form = ScheduledPostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('social_media_accounts')
+    else:
+        form = ScheduledPostForm(initial={'social_media_account': account})
+    return render(request, 'schedule_post.html', {'form': form, 'account': account})

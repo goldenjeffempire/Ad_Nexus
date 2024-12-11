@@ -49,8 +49,8 @@ class SocialMediaPlatform(models.Model):
 
 class SocialMediaAccount(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    platform = models.ForeignKey(SocialMediaPlatform, on_delete=models.CASCADE)
-    username = models.CharField(max_length=100)
+    platform_name = models.ForeignKey(SocialMediaPlatform, on_delete=models.CASCADE)
+    account_name = models.CharField(max_length=100)
     access_token = models.TextField()  # Token for API authentication
     connected_at = models.DateTimeField(auto_now_add=True)
 
@@ -197,3 +197,24 @@ class AIChatbot(models.Model):
 
     def __str__(self):
         return self.question
+
+class EngagementInsight(models.Model):
+    social_media_account = models.ForeignKey(SocialMediaAccount, on_delete=models.CASCADE)
+    date = models.DateField()
+    likes = models.PositiveIntegerField()
+    comments = models.PositiveIntegerField()
+    shares = models.PositiveIntegerField()
+    reach = models.PositiveIntegerField()  # Total reach of the post
+    impressions = models.PositiveIntegerField()  # How many times the post was seen
+
+    def __str__(self):
+        return f"Insights for {self.social_media_account.account_name} on {self.date}"
+
+class ScheduledPost(models.Model):
+    social_media_account = models.ForeignKey(SocialMediaAccount, on_delete=models.CASCADE)
+    post_content = models.TextField()  # Content of the post (text, images, etc.)
+    scheduled_time = models.DateTimeField()  # Time when the post will go live
+    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('posted', 'Posted')])
+
+    def __str__(self):
+        return f"Post for {self.social_media_account.account_name} scheduled for {self.scheduled_time}"
