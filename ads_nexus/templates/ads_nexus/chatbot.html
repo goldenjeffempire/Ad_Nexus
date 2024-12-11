@@ -3,15 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Marketing Assistant</title>
+    <title>AI Marketing Assistant for Ad Management</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #2C3E50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
         #chat-box {
-            width: 100%;
+            width: 80%;
             height: 400px;
             border: 1px solid #ccc;
             padding: 10px;
             overflow-y: scroll;
-            margin-bottom: 10px;
+            margin: 20px auto;
+            background-color: white;
         }
         #messages {
             margin-bottom: 10px;
@@ -23,81 +36,120 @@
         }
         button {
             padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #chatbox {
+            width: 80%;
+            height: 400px;
+            border: 1px solid #ccc;
+            margin: 20px auto;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        #userInput {
+            width: 80%;
+            padding: 10px;
         }
     </style>
-    <script>
-        // Initialize speech recognition (for voice input)
-        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-
-        // Function to start voice recognition
-        function startVoiceCommand() {
-            recognition.start();
-        }
-
-        // Handle speech recognition result
-        recognition.onresult = function(event) {
-            var transcript = event.results[0][0].transcript;
-            document.getElementById('chat-input').value = transcript;
-        };
-
-        // Send message function (for text input)
-        function sendMessage() {
-            const chatInput = document.getElementById('chat-input');
-            const message = chatInput.value.trim();
-            if (message === '') return;
-
-            // Display the user's message in the chat box
-            const messagesDiv = document.getElementById('messages');
-            const userMessageDiv = document.createElement('div');
-            userMessageDiv.textContent = "You: " + message;
-            messagesDiv.appendChild(userMessageDiv);
-
-            // Send the message to the server and get the response
-            fetch('/chatbot/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({ message: message })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const botMessageDiv = document.createElement('div');
-                botMessageDiv.textContent = "AI: " + data.response;
-                messagesDiv.appendChild(botMessageDiv);
-                chatInput.value = '';  // Clear the input field after sending
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Scroll to the bottom
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        // Optional: Automatically send message when user presses Enter
-        document.getElementById('chat-input').addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
-        });
-    </script>
 </head>
 <body>
-    <header>
-        <h1>AI Marketing Assistant</h1>
-    </header>
 
-    <!-- Chat Box -->
-    <div id="chat-box">
-        <div id="messages"></div>
-    </div>
+<header>
+    <h1>AI Marketing Assistant for Ad Management</h1>
+</header>
 
-    <!-- Chat Input and Buttons -->
-    <input 
-        type="text" 
-        id="chat-input" 
-        placeholder="Ask me anything about your campaigns" 
-        required>
-    <button onclick="sendMessage()">Send</button>
-    <button type="button" onclick="startVoiceCommand()">🎙 Speak</button>
+<!-- Chat Box -->
+<div id="chat-box">
+    <div id="messages"></div>
+</div>
+
+<!-- User Input Field -->
+<input type="text" id="chat-input" placeholder="Ask me anything about your campaigns..." required>
+<button onclick="sendMessage()">Send</button>
+<button type="button" onclick="startVoiceCommand()">🎙 Speak</button>
+
+<!-- AI Chatbot Section -->
+<div id="chatbox">
+    <p><strong>Chatbot:</strong> Hello! How can I assist you with your ad campaign?</p>
+</div>
+<input type="text" id="userInput" placeholder="Ask me anything about your ads...">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    // Initialize speech recognition (for voice input)
+    var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+    // Function to start voice recognition
+    function startVoiceCommand() {
+        recognition.start();
+    }
+
+    // Handle speech recognition result
+    recognition.onresult = function(event) {
+        var transcript = event.results[0][0].transcript;
+        document.getElementById('chat-input').value = transcript;
+    };
+
+    // Send message function (for text input)
+    function sendMessage() {
+        const chatInput = document.getElementById('chat-input');
+        const userMessage = chatInput.value.trim();
+        if (userMessage === '') return;
+
+        // Display the user's message in the chat box
+        const messagesDiv = document.getElementById('messages');
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.textContent = "You: " + userMessage;
+        messagesDiv.appendChild(userMessageDiv);
+
+        // Send the message to the server and get the response
+        fetch('/chatbot/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ message: userMessage })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const botMessageDiv = document.createElement('div');
+            botMessageDiv.textContent = "AI: " + data.response;
+            messagesDiv.appendChild(botMessageDiv);
+            chatInput.value = '';  // Clear the input field after sending
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;  // Scroll to the bottom
+        })
+        .catch(error => console.error('Error:', error));
+
+        // Additional chatbot for ad management
+        var chatbox = document.getElementById("chatbox");
+        var userMessageChatbot = `<p><strong>You:</strong> ${userMessage}</p>`;
+        chatbox.innerHTML += userMessageChatbot;
+        document.getElementById("userInput").value = '';
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+        fetch(`/get_chatbot_response/?query=${userMessage}`)
+            .then(response => response.json())
+            .then(data => {
+                var botResponse = `<p><strong>Chatbot:</strong> ${data.response}</p>`;
+                chatbox.innerHTML += botResponse;
+                chatbox.scrollTop = chatbox.scrollHeight;
+            });
+    }
+
+    // Optional: Automatically send message when user presses Enter
+    document.getElementById('chat-input').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+</script>
 
 </body>
 </html>

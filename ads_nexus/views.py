@@ -26,6 +26,7 @@ from .ad_targeting import dynamic_ad_targeting
 from django.contrib.auth.decorators import login_required
 from .performance_simulator import simulate_ad_performance
 from .ad_integration import create_ad_on_platform
+from .chatbot_service import get_chatbot_response
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -429,6 +430,14 @@ def ad_performance(request, campaign_id):
         'ad_campaign': ad_campaign,
         'ad_performance': ad_performance
     })
+
+def chatbot_view(request):
+    return render(request, 'chatbot.html')
+
+def get_chatbot_response_view(request):
+    query = request.GET.get('query', '')
+    response = get_chatbot_response(query)
+    return JsonResponse({'response': response})
 
 def manage_ad_campaign(request, campaign_id):
     ad_campaign = get_object_or_404(AdCampaign, id=campaign_id)

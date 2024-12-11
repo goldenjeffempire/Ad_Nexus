@@ -161,9 +161,6 @@ class ChatHistory(models.Model):
     def __str__(self):
         return f"Chat with {self.user.username} at {self.timestamp}"
 
-from django.db import models
-from django.contrib.auth.models import User
-
 class AdCampaign(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -193,3 +190,10 @@ class AdPlatform(models.Model):
 
     def __str__(self):
         return self.name
+
+class AIChatbot(models.Model):
+    question = models.CharField(max_length=255)
+    answer = models.TextField()
+
+    def __str__(self):
+        return self.question
