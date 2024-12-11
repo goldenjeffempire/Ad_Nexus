@@ -1,7 +1,8 @@
 from django.db import models
+from django.conf import settings
 
 class UserProfile(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     interests = models.TextField()  # Store user interests as a JSON string
     preferences = models.TextField()  # Store preferences for ad categories
 
@@ -46,16 +47,15 @@ class SocialMediaPlatform(models.Model):
     def __str__(self):
         return self.name
 
-
 class SocialMediaAccount(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    platform_name = models.ForeignKey(SocialMediaPlatform, on_delete=models.CASCADE)
+    platform = models.ForeignKey(SocialMediaPlatform, on_delete=models.CASCADE)
     account_name = models.CharField(max_length=100)
     access_token = models.TextField()  # Token for API authentication
     connected_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.username} on {self.platform.name}"
+        return f"{self.account_name} on {self.platform.name}"
 
 class AdCampaign(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -68,7 +68,6 @@ class AdCampaign(models.Model):
     def __str__(self):
         return self.name
 
-
 class AdTargeting(models.Model):
     campaign = models.OneToOneField(AdCampaign, on_delete=models.CASCADE, related_name='targeting')
     age_range = models.CharField(max_length=50, blank=True, null=True)
@@ -78,15 +77,13 @@ class AdTargeting(models.Model):
     def __str__(self):
         return f"Targeting for {self.campaign.name}"
 
-
 class AdPerformance(models.Model):
     campaign = models.OneToOneField(AdCampaign, on_delete=models.CASCADE, related_name='performance')
     impressions = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
     conversions = models.IntegerField(default=0)
     ctr = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Click-through rate
-68    y
-cpc = models.DecimalField(max_digits=5, decimal_p5laces=2, default=0.0)  # Cost per click
+    cpc = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Cost per click
     roi = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Return on investment
 
     def calculate_ctr(self):
@@ -101,8 +98,8 @@ cpc = models.DecimalField(max_digits=5, decimal_p5laces=2, default=0.0)  # Cost 
         else:
             self.cpc = 0
 
-    def calculate_roi(self, revenue):
-        if revenue > 0:
+    def calculate_roi(self, ad_spend, revenue):
+        if ad_spend > 0:
             self.roi = (revenue - ad_spend) / ad_spend * 100
         else:
             self.roi = 0
@@ -111,16 +108,15 @@ cpc = models.DecimalField(max_digits=5, decimal_p5laces=2, default=0.0)  # Cost 
         return f"Performance for {self.campaign.name}"
 
 class SocialShareAnalytics(models.Model):
-    ad = models.ForeignKey('Ad', on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
     platform = models.CharField(max_length=50)
     share_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f'{self.ad.title} shared on {self.platform}'
 
-# Model to store user demographic data for targeting
 class UserDemographics(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=10, null=True, blank=True)
     location = models.CharField(max_length=100, null=True, blank=True)
@@ -128,68 +124,22 @@ class UserDemographics(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Demographics"
 
-# Model for user interests and behaviors
 class UserBehavior(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     interests = models.JSONField(default=list)  # Store interests as a list of strings
     past_ad_interactions = models.JSONField(default=list)  # Store interaction data as JSON
 
     def __str__(self):
         return f"{self.user.username}'s Behaviors"
 
-# Model for Ad Campaign targeting configuration
-class AdCampaign(models.Model):
-    name = models.CharField(max_length=255)
-    target_age_range = models.CharField(max_length=50, null=True, blank=True)
-    target_gender = models.CharField(max_length=10, null=True, blank=True)
-    target_location = models.CharField(max_length=100, null=True, blank=True)
-    target_interests = models.JSONField(default=list)
-    budget = models.DecimalField(max_digits=10, decimal_places=2)
-    start_date = models.DateField()
-    end_date = models.DateField()
-
-    def __str__(self):
-        return f"Campaign: {self.name}"
-
-# Model for storing chat history
 class ChatHistory(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     message = models.TextField()
     response = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Chat with {self.user.username} at {self.timestamp}"
-
-class AdCampaign(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    budget = models.DecimalField(max_digits=10, decimal_places=2)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    platforms = models.ManyToManyField(AdPlatform, related_name='campaigns')
-
-    def __str__(self):
-        return self.title
-
-class AdPerformance(models.Model):
-    ad_campaign = models.ForeignKey(AdCampaign, on_delete=models.CASCADE)
-    engagement_rate = models.FloatField(default=0.0)
-    estimated_impressions = models.IntegerField(default=0)
-    clicks = models.IntegerField(default=0)
-    timestamp = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Performance for {self.ad_campaign.title} at {self.timestamp}"
-
-class AdPlatform(models.Model):
-    name = models.CharField(max_length=100)
-    api_key = models.CharField(max_length=255)  # For third-party API integrations
-    description = models.TextField()
-
-    def __str__(self):
-        return self.name
 
 class AIChatbot(models.Model):
     question = models.CharField(max_length=255)
@@ -218,3 +168,32 @@ class ScheduledPost(models.Model):
 
     def __str__(self):
         return f"Post for {self.social_media_account.account_name} scheduled for {self.scheduled_time}"
+
+class TargetAudience(models.Model):
+    ad_campaign = models.ForeignKey(AdCampaign, on_delete=models.CASCADE)
+    age_range = models.CharField(max_length=50)  # e.g., "18-24"
+    location = models.CharField(max_length=100)  # Location-based targeting
+    interests = models.TextField()  # Interests based targeting
+    behavior = models.TextField()  # Behavioral data (e.g., "frequent shoppers", "tech enthusiasts")
+
+    def __str__(self):
+        return f"Audience for {self.ad_campaign.campaign_name}"
+
+class AdCreative(models.Model):
+    ad_campaign = models.ForeignKey(AdCampaign, on_delete=models.CASCADE)
+    creative_type = models.CharField(max_length=50, choices=[('image', 'Image'), ('video', 'Video')])
+    creative_url = models.URLField()  # URL to the hosted creative (image or video)
+    description = models.TextField()  # Description of the ad creative
+
+    def __str__(self):
+        return f"Creative for {self.ad_campaign.campaign_name}"
+
+class SplitTest(models.Model):
+    ad_campaign = models.ForeignKey(AdCampaign, on_delete=models.CASCADE)
+    version_name = models.CharField(max_length=100)  # e.g., "Version A", "Version B"
+    creative = models.ForeignKey(AdCreative, on_delete=models.CASCADE)  # Link to the ad creative being tested
+    impressions = models.PositiveIntegerField(default=0)
+    clicks = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"Split Test for {self.ad_campaign.campaign_name} - {self.version_name}"
