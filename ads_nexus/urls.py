@@ -27,3 +27,5 @@ urlpatterns = [
     path('analytics/', views.analytics, name='analytics'),
     path('chatbot/', views.chatbot, name='chatbot'),
     path('ad_performance/<int:campaign_id>/', views.ad_performance, name='ad_performance'),]
+    path('manage_ad_campaign/<int:campaign_id>/', views.manage_ad_campaign, name='manage_ad_campaign'),
+]

@@ -171,6 +171,7 @@ class AdCampaign(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    platforms = models.ManyToManyField(AdPlatform, related_name='campaigns')
 
     def __str__(self):
         return self.title
@@ -184,3 +185,11 @@ class AdPerformance(models.Model):
 
     def __str__(self):
         return f"Performance for {self.ad_campaign.title} at {self.timestamp}"
+
+class AdPlatform(models.Model):
+    name = models.CharField(max_length=100)
+    api_key = models.CharField(max_length=255)  # For third-party API integrations
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name

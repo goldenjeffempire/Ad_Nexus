@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -25,7 +25,7 @@ import json
 from .ad_targeting import dynamic_ad_targeting
 from django.contrib.auth.decorators import login_required
 from .performance_simulator import simulate_ad_performance
-
+from .ad_integration import create_ad_on_platform
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -428,4 +428,21 @@ def ad_performance(request, campaign_id):
     return render(request, 'ad_performance.html', {
         'ad_campaign': ad_campaign,
         'ad_performance': ad_performance
+    })
+
+def manage_ad_campaign(request, campaign_id):
+    ad_campaign = get_object_or_404(AdCampaign, id=campaign_id)
+    platforms = AdPlatform.objects.all()
+
+    if request.method == "POST":
+        selected_platforms = request.POST.getlist('platforms')  # Get selected platforms from the form
+        for platform_id in selected_platforms:
+            platform = AdPlatform.objects.get(id=platform_id)
+            create_ad_on_platform(ad_campaign, platform)  # Simulate ad creation on the platform
+
+        return redirect('ad_performance', campaign_id=campaign_id)  # Redirect to performance page
+
+    return render(request, 'manage_ad_campaign.html', {
+        'ad_campaign': ad_campaign,
+        'platforms': platforms
     })

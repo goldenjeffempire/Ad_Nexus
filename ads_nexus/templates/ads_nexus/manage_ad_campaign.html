@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Ad Campaign</title>
+</head>
+<body>
+    <h1>Manage Ad Campaign: {{ ad_campaign.title }}</h1>
+    <p><strong>Description:</strong> {{ ad_campaign.description }}</p>
+    <p><strong>Budget:</strong> ${{ ad_campaign.budget }}</p>
+
+    <h2>Select Platforms to Run Your Ad</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <ul>
+            {% for platform in platforms %}
+                <li>
+                    <input type="checkbox" name="platforms" value="{{ platform.id }}" id="platform_{{ platform.id }}">
+                    <label for="platform_{{ platform.id }}">{{ platform.name }}</label>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Launch Ad</button>
+    </form>
+
+    <p><a href="/">Back to Dashboard</a></p>
+</body>
+</html>
