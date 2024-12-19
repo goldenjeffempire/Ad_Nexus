@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.conf import settings
 
 class UserProfile(models.Model):
@@ -216,3 +217,12 @@ class AdAnalytics(models.Model):
         if self.impressions > 0:
             self.conversion_rate = (self.conversions / self.impressions) * 100
         super().save(*args, **kwargs)
+
+class ContentRecommendation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    recommended_content = models.ForeignKey(AdCampaign, on_delete=models.CASCADE)
+    recommendation_score = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    date_recommended = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Recommendation for {self.user.username}: {self.recommended_content.campaign_name}"

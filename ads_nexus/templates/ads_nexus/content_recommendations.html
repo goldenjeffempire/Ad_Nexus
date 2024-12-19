@@ -12,5 +12,17 @@
             <li>Ad ID: {{ ad }}</li>
         {% endfor %}
     </ul>
+
+    <h1>Recommended Ads for You</h1>
+    <ul>
+        {% for recommendation in recommendations %}
+            <li>
+                <a href="{% url 'ad_campaign_detail' recommendation.ad_campaign.id %}">
+                    <h3>{{ recommendation.ad_campaign.campaign_name }}</h3>
+                    <p>Score: {{ recommendation.score }}</p>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

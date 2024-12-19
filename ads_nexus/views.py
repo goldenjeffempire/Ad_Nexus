@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -508,3 +508,9 @@ def generate_report(request, campaign_id):
     }
 
     return render(request, 'generate_report.html', {'report': report})
+
+def content_recommendations(request):
+    user = request.user
+    recommendations = generate_recommendations(user)
+
+    return render(request, 'content_recommendations.html', {'recommendations': recommendations})
