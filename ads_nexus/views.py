@@ -559,10 +559,26 @@ def generate_report(request, campaign_id):
     return render(request, 'generate_report.html', {'report': report})
 
 def content_recommendations(request):
+    """
+    Generate and render content recommendations for the logged-in user.
+
+    Args:
+        request: The HTTP request object.
+
+    Returns:
+        HttpResponse: Rendered content recommendations page.
+    """
     user = request.user
+
+    # Generate recommendations using a unified function
     recommendations = generate_recommendations(user)
 
-    return render(request, 'content_recommendations.html', {'recommendations': recommendations})
+    # Context dictionary for rendering the template
+    context = {
+        'recommendations': recommendations
+    }
+
+    return render(request, 'content_recommendations.html', context)
 
 def manage_social_media_accounts(request):
     user = request.user
@@ -717,3 +733,4 @@ def integrate_api(request):
 def view_api_settings(request):
     api_settings = SocialMediaAPI.objects.all()
     return render(request, 'view_api_settings.html', {'api_settings': api_settings})
+

@@ -327,3 +327,22 @@ class SocialMediaAPI(models.Model):
 
     def __str__(self):
         return f"{self.platform} API Settings"
+
+class Content(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    category = models.CharField(max_length=100)
+    tags = models.JSONField()  # Tags for content, to help with content-based recommendations
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class Interaction(models.Model):
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    content = models.ForeignKey('Content', on_delete=models.CASCADE)
+    interaction_type = models.CharField(max_length=50)  # Like, View, Comment, etc.
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} {self.interaction_type} on {self.content.title}"

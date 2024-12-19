@@ -7,22 +7,52 @@
 </head>
 <body>
     <h1>Your Personalized Content Recommendations</h1>
-    <ul>
-        {% for ad in recommended_ads %}
-            <li>Ad ID: {{ ad }}</li>
-        {% endfor %}
-    </ul>
+
+    <!-- Section for recommended content -->
+    {% if recommendations %}
+        <ul>
+            {% for content in recommendations %}
+                <li>
+                    <a href="{% url 'content_detail' content.id %}">
+                        <h3>{{ content.title }}</h3>
+                    </a>
+                    <p>{{ content.description }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recommendations available at this time.</p>
+    {% endif %}
 
     <h1>Recommended Ads for You</h1>
-    <ul>
-        {% for recommendation in recommendations %}
-            <li>
-                <a href="{% url 'ad_campaign_detail' recommendation.ad_campaign.id %}">
-                    <h3>{{ recommendation.ad_campaign.campaign_name }}</h3>
+    
+    <!-- Section for recommended ads -->
+    {% if recommended_ads %}
+        <ul>
+            {% for ad in recommended_ads %}
+                <li>Ad ID: {{ ad }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No ads recommended for you at this time.</p>
+    {% endif %}
+
+    <h1>Recommended Ad Campaigns</h1>
+    
+    <!-- Section for ad campaigns -->
+    {% if recommendations %}
+        <ul>
+            {% for recommendation in recommendations %}
+                <li>
+                    <a href="{% url 'ad_campaign_detail' recommendation.ad_campaign.id %}">
+                        <h3>{{ recommendation.ad_campaign.campaign_name }}</h3>
+                    </a>
                     <p>Score: {{ recommendation.score }}</p>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No recommended ad campaigns at this time.</p>
+    {% endif %}
 </body>
 </html>
