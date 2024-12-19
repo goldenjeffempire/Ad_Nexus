@@ -53,7 +53,7 @@ class SocialMediaAccount(models.Model):
         ('FB', 'Facebook'),
         ('IG', 'Instagram'),
         ('TW', 'Twitter'),
-        ('LN', 'LinkedIn'),
+        ('TK', 'Tiktok'),
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -289,3 +289,20 @@ class CrossPlatformCampaign(models.Model):
 
     def __str__(self):
         return self.name
+
+class SocialMediaAPI(models.Model):
+    PLATFORM_CHOICES = [
+        ('facebook', 'Facebook'),
+        ('instagram', 'Instagram'),
+        ('twitter', 'Twitter'),
+        ('tiktok', 'Tiktok'),
+    ]
+
+    platform = models.CharField(max_length=20, choices=PLATFORM_CHOICES)
+    api_key = models.CharField(max_length=255)
+    api_secret = models.CharField(max_length=255)
+    access_token = models.CharField(max_length=255)
+    access_token_secret = models.CharField(max_length=255, null=True, blank=True)  # For platforms like Twitter
+
+    def __str__(self):
+        return f"{self.platform} API Settings"

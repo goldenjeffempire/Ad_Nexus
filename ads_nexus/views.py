@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric, AdPerformanceSimulation, CrossPlatformCampaign, Platform
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric, AdPerformanceSimulation, CrossPlatformCampaign, Platform, SocialMediaAPI
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -620,3 +620,27 @@ def create_campaign(request):
 def view_campaigns(request):
     campaigns = CrossPlatformCampaign.objects.all()
     return render(request, 'view_campaigns.html', {'campaigns': campaigns})
+
+def integrate_api(request):
+    if request.method == 'POST':
+        platform = request.POST.get('platform')
+        api_key = request.POST.get('api_key')
+        api_secret = request.POST.get('api_secret')
+        access_token = request.POST.get('access_token')
+        access_token_secret = request.POST.get('access_token_secret', '')
+
+        # Save API credentials to the database
+        SocialMediaAPI.objects.create(
+            platform=platform,
+            api_key=api_key,
+            api_secret=api_secret,
+            access_token=access_token,
+            access_token_secret=access_token_secret
+        )
+        return redirect('view_api_settings')
+
+    return render(request, 'integrate_api.html')
+
+def view_api_settings(request):
+    api_settings = SocialMediaAPI.objects.all()
+    return render(request, 'view_api_settings.html', {'api_settings': api_settings})

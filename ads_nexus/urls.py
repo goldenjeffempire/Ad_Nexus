@@ -37,4 +37,6 @@ urlpatterns = [
     path('engagement-insights/', views.engagement_insights, name='engagement_insights'),
     path('create-campaign/', views.create_campaign, name='create_campaign'),
     path('view-campaigns/', views.view_campaigns, name='view_campaigns'),
+    path('integrate-api/', views.integrate_api, name='integrate_api'),
+    path('view-api-settings/', views.view_api_settings, name='view_api_settings'),
 ]

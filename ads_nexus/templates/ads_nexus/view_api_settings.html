@@ -1,0 +1,19 @@
+<h1>API Integration Settings</h1>
+
+{% if api_settings %}
+    <ul>
+    {% for setting in api_settings %}
+        <li>
+            <strong>{{ setting.platform }}</strong><br>
+            API Key: {{ setting.api_key }}<br>
+            API Secret: {{ setting.api_secret }}<br>
+            Access Token: {{ setting.access_token }}<br>
+            {% if setting.access_token_secret %}
+                Access Token Secret: {{ setting.access_token_secret }}<br>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No API integrations found.</p>
+{% endif %}
