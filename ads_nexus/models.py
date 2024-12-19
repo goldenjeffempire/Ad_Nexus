@@ -264,3 +264,20 @@ class EngagementMetric(models.Model):
 
     def __str__(self):
         return f"Engagement for {self.post} - Likes: {self.likes}, Comments: {self.comments}, Shares: {self.shares}, Reach: {self.reach}"
+
+class AdPerformanceSimulation(models.Model):
+    post = models.OneToOneField(SocialMediaPost, on_delete=models.CASCADE)
+    impressions = models.IntegerField(default=0)
+    clicks = models.IntegerField(default=0)
+    conversions = models.IntegerField(default=0)
+    estimated_roi = models.FloatField(default=0.0)  # Estimated return on investment
+
+    def simulate_performance(self):
+        # Simple algorithm to estimate performance
+        click_through_rate = (self.clicks / self.impressions) * 100 if self.impressions > 0 else 0
+        conversion_rate = (self.conversions / self.clicks) * 100 if self.clicks > 0 else 0
+        self.estimated_roi = conversion_rate * 1.5  # Example ROI based on conversion rate
+        self.save()
+
+    def __str__(self):
+        return f"Ad Performance for {self.post} - Estimated ROI: {self.estimated_roi}%"

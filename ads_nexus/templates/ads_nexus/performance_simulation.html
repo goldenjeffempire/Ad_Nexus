@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance Simulation</title>
+    <title>Ad Performance and Campaign Simulation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,11 +42,19 @@
             font-size: 1.1em;
             margin: 10px 0;
         }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Ad Performance and Campaign Simulation</h1>
 
+    <!-- Simulation Form Section -->
     <div class="form-section">
         <h2>Simulate Your Ad Performance</h2>
         <form method="POST">
@@ -64,6 +72,7 @@
         </form>
     </div>
 
+    <!-- Performance Results Section -->
     {% if performance %}
     <div class="result-section">
         <h2>Campaign Performance Results</h2>
@@ -73,5 +82,26 @@
     </div>
     {% endif %}
 
+    <!-- Real-Time Performance Data -->
+    <h2>Real-Time Performance Simulation</h2>
+    {% if performance_data %}
+        <ul>
+        {% for data in performance_data %}
+            <li>
+                <strong>Post:</strong> {{ data.post.post_content }} <br>
+                {% if data.performance %}
+                    <strong>Impressions:</strong> {{ data.performance.impressions }} <br>
+                    <strong>Clicks:</strong> {{ data.performance.clicks }} <br>
+                    <strong>Conversions:</strong> {{ data.performance.conversions }} <br>
+                    <strong>Estimated ROI:</strong> {{ data.performance.estimated_roi }}% <br>
+                {% else %}
+                    <p>No performance data available.</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No posts available for performance simulation.</p>
+    {% endif %}
 </body>
 </html>

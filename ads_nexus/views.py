@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric, AdPerformanceSimulation
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -570,3 +570,24 @@ def engagement_insights(request):
         })
 
     return render(request, 'engagement_insights.html', {'engagement_data': engagement_data})
+
+def performance_simulation(request):
+    user = request.user
+    posts = SocialMediaPost.objects.filter(account__user=user)
+
+    performance_data = []
+    for post in posts:
+        try:
+            performance = AdPerformanceSimulation.objects.get(post=post)
+            performance.simulate_performance()
+            performance_data.append({
+                'post': post,
+                'performance': performance
+            })
+        except AdPerformanceSimulation.DoesNotExist:
+            performance_data.append({
+                'post': post,
+                'performance': None
+            })
+
+    return render(request, 'performance_simulation.html', {'performance_data': performance_data})
