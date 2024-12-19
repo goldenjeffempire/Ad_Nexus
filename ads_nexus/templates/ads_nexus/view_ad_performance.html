@@ -1,0 +1,6 @@
+<h1>Performance for {{ campaign.campaign_name }}</h1>
+<ul>
+    {% for split_test in split_tests %}
+        <li>Version: {{ split_test.version_name }} - Impressions: {{ split_test.impressions }} - Clicks: {{ split_test.clicks }}</li>
+    {% endfor %}
+</ul>

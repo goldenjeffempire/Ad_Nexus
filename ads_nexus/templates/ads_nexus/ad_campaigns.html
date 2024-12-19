@@ -1,0 +1,9 @@
+<h1>Your Ad Campaigns</h1>
+<ul>
+    {% for campaign in campaigns %}
+        <li>{{ campaign.campaign_name }} - 
+            <a href="{% url 'view_ad_performance' campaign.id %}">View Performance</a> |
+            <a href="{% url 'personalize_ad' campaign.id %}">Personalize Ad</a>
+        </li>
+    {% endfor %}
+</ul>
