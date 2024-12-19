@@ -4,19 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ad Campaign Performance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        hr {
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
+    <!-- Campaign Details Section -->
     <h1>Performance for "{{ ad_campaign.title }}"</h1>
     <p><strong>Description:</strong> {{ ad_campaign.description }}</p>
     <p><strong>Budget:</strong> ${{ ad_campaign.budget }}</p>
     <p><strong>Start Date:</strong> {{ ad_campaign.start_date }}</p>
     <p><strong>End Date:</strong> {{ ad_campaign.end_date }}</p>
 
+    <!-- Performance Metrics for Individual Campaign -->
     <h2>Performance Metrics</h2>
     <ul>
         <li><strong>Engagement Rate:</strong> {{ ad_performance.engagement_rate }}%</li>
         <li><strong>Estimated Impressions:</strong> {{ ad_performance.estimated_impressions }}</li>
         <li><strong>Clicks:</strong> {{ ad_performance.clicks }}</li>
+    </ul>
+
+    <hr>
+
+    <!-- Overall Performance Analytics Section -->
+    <h1>Ad Performance Analytics</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Platform</th>
+                <th>Clicks</th>
+                <th>Impressions</th>
+                <th>Engagement Rate</th>
+                <th>Conversions</th>
+                <th>Conversion Rate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in performance_data %}
+                <tr>
+                    <td>{{ data.platform }}</td>
+                    <td>{{ data.clicks }}</td>
+                    <td>{{ data.impressions }}</td>
+                    <td>{{ data.engagement_rate }}%</td>
+                    <td>{{ data.conversions }}</td>
+                    <td>{{ data.conversion_rate }}%</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Summary Section -->
+    <h3>Summary</h3>
+    <ul>
+        <li><strong>Total Clicks:</strong> {{ total_clicks }}</li>
+        <li><strong>Total Impressions:</strong> {{ total_impressions }}</li>
+        <li><strong>Average Engagement Rate:</strong> {{ average_engagement_rate }}%</li>
+        <li><strong>Total Conversions:</strong> {{ total_conversions }}</li>
     </ul>
 
     <p><a href="/">Back to Dashboard</a></p>

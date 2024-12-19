@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.utils import timezone
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -86,34 +87,54 @@ class AdTargeting(models.Model):
         return f"Targeting for {self.campaign.name}"
 
 class AdPerformance(models.Model):
-    campaign = models.OneToOneField(AdCampaign, on_delete=models.CASCADE, related_name='performance')
+    campaign = models.ForeignKey('Campaign', on_delete=models.CASCADE, related_name='performance')
+    platform = models.CharField(max_length=50)  # e.g., Facebook, Instagram, Twitter, Tiktok, etc.
     impressions = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
     conversions = models.IntegerField(default=0)
+    engagement_rate = models.FloatField(default=0.0)
+    conversion_rate = models.FloatField(default=0.0)
     ctr = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Click-through rate
-    cpc = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Cost per click
-    roi = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Return on investment
+    cpc = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Cost per click
+    roi = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Return on investment
+    updated_at = models.DateTimeField(default=timezone.now)
 
     def calculate_ctr(self):
+        """Calculate Click-through Rate (CTR)."""
         if self.impressions > 0:
             self.ctr = (self.clicks / self.impressions) * 100
         else:
             self.ctr = 0
 
     def calculate_cpc(self, ad_spend):
+        """Calculate Cost per Click (CPC)."""
         if self.clicks > 0:
             self.cpc = ad_spend / self.clicks
         else:
             self.cpc = 0
 
     def calculate_roi(self, ad_spend, revenue):
+        """Calculate Return on Investment (ROI)."""
         if ad_spend > 0:
             self.roi = (revenue - ad_spend) / ad_spend * 100
         else:
             self.roi = 0
 
+    def calculate_conversion_rate(self):
+        """Calculate Conversion Rate."""
+        if self.impressions > 0:
+            self.conversion_rate = (self.conversions / self.impressions) * 100
+        else:
+            self.conversion_rate = 0
+
+    def save(self, *args, **kwargs):
+        """Override save method to auto-calculate metrics before saving."""
+        self.calculate_ctr()
+        self.calculate_conversion_rate()
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"Performance for {self.campaign.name}"
+        return f"Performance for {self.campaign.title} on {self.platform}"
 
 class SocialShareAnalytics(models.Model):
     ad = models.ForeignKey(Ad, on_delete=models.CASCADE)

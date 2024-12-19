@@ -423,9 +423,30 @@ def chatbot(request):
 
 def ad_performance(request, campaign_id):
     ad_campaign = get_object_or_404(AdCampaign, id=campaign_id)
+    simulate_ad_performance(ad_campaign)
 
-    # Simulate performance data (this could be triggered periodically in production)
-    ad_performance = simulate_ad_performance(ad_campaign)
+    # Fetch performance data for the specific campaign
+    performance_data = AdPerformance.objects.filter(campaign_id=campaign_id)
+
+    # Calculate totals and averages
+    total_clicks = sum([p.clicks for p in performance_data])
+    total_impressions = sum([p.impressions for p in performance_data])
+    average_engagement_rate = (
+        sum([p.engagement_rate for p in performance_data]) / len(performance_data)
+        if performance_data else 0
+    )
+    total_conversions = sum([p.conversions for p in performance_data])
+
+    context = {
+        'ad_campaign': ad_campaign,
+        'performance_data': performance_data,
+        'total_clicks': total_clicks,
+        'total_impressions': total_impressions,
+        'average_engagement_rate': average_engagement_rate,
+        'total_conversions': total_conversions,
+    }
+
+    return render(request, 'ad_performance.html', context)
 
 def manage_social_media_accounts(request):
     user = request.user
