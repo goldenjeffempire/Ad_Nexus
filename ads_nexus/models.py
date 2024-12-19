@@ -197,3 +197,22 @@ class SplitTest(models.Model):
 
     def __str__(self):
         return f"Split Test for {self.ad_campaign.campaign_name} - {self.version_name}"
+
+class AdAnalytics(models.Model):
+    ad_campaign = models.ForeignKey(AdCampaign, on_delete=models.CASCADE)
+    date = models.DateField()
+    impressions = models.PositiveIntegerField(default=0)
+    clicks = models.PositiveIntegerField(default=0)
+    conversions = models.PositiveIntegerField(default=0)  # Conversions represent the number of actions taken, like purchases or sign-ups
+    click_through_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    conversion_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+
+    def __str__(self):
+        return f"Analytics for {self.ad_campaign.campaign_name} on {self.date}"
+
+    def save(self, *args, **kwargs):
+        if self.impressions > 0:
+            self.click_through_rate = (self.clicks / self.impressions) * 100
+        if self.impressions > 0:
+            self.conversion_rate = (self.conversions / self.impressions) * 100
+        super().save(*args, **kwargs)

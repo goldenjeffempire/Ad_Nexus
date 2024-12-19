@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -485,3 +485,26 @@ def schedule_post(request, account_id):
     else:
         form = ScheduledPostForm(initial={'social_media_account': account})
     return render(request, 'schedule_post.html', {'form': form, 'account': account})
+
+def view_ad_analytics(request, campaign_id):
+    campaign = AdCampaign.objects.get(id=campaign_id)
+    analytics_data = AdAnalytics.objects.filter(ad_campaign=campaign).order_by('-date')
+    return render(request, 'view_ad_analytics.html', {'campaign': campaign, 'analytics_data': analytics_data})
+
+def generate_report(request, campaign_id):
+    campaign = AdCampaign.objects.get(id=campaign_id)
+    analytics_data = AdAnalytics.objects.filter(ad_campaign=campaign)
+    total_impressions = sum([data.impressions for data in analytics_data])
+    total_clicks = sum([data.clicks for data in analytics_data])
+    total_conversions = sum([data.conversions for data in analytics_data])
+
+    report = {
+        'campaign_name': campaign.campaign_name,
+        'total_impressions': total_impressions,
+        'total_clicks': total_clicks,
+        'total_conversions': total_conversions,
+        'click_through_rate': (total_clicks / total_impressions) * 100 if total_impressions else 0,
+        'conversion_rate': (total_conversions / total_impressions) * 100 if total_impressions else 0,
+    }
+
+    return render(request, 'generate_report.html', {'report': report})

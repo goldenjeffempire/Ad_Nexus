@@ -1,0 +1,25 @@
+<h1>Analytics for {{ campaign.campaign_name }}</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Impressions</th>
+            <th>Clicks</th>
+            <th>Conversions</th>
+            <th>CTR (%)</th>
+            <th>Conversion Rate (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in analytics_data %}
+            <tr>
+                <td>{{ data.date }}</td>
+                <td>{{ data.impressions }}</td>
+                <td>{{ data.clicks }}</td>
+                <td>{{ data.conversions }}</td>
+                <td>{{ data.click_through_rate }}%</td>
+                <td>{{ data.conversion_rate }}%</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
