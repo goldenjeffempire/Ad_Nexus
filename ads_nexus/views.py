@@ -27,6 +27,7 @@ from django.contrib.auth.decorators import login_required
 from .performance_simulator import simulate_ad_performance
 from .ad_integration import create_ad_on_platform
 from .chatbot_service import get_chatbot_response
+from .campaign_management import CampaignManager
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -593,15 +594,40 @@ def performance_simulation(request):
     return render(request, 'performance_simulation.html', {'performance_data': performance_data})
 
 def create_campaign(request):
+    """
+    Handle the creation of social media campaigns and posting ads to selected platforms.
+    """
     platforms = Platform.objects.all()
 
     if request.method == 'POST':
+        # Fetch campaign details from the request
         name = request.POST.get('name')
         description = request.POST.get('description')
         start_date = request.POST.get('start_date')
         end_date = request.POST.get('end_date')
         selected_platforms = request.POST.getlist('platforms')
+        message = request.POST.get('message')
+        image_path = request.FILES.get('image_path', None)  # Image for Instagram
+        video_path = request.FILES.get('video_path', None)  # Video for TikTok
 
+        # Social media credentials (to be replaced with environment variables or secure storage)
+        facebook_token = 'your_facebook_access_token'
+        instagram_username = 'your_instagram_username'
+        instagram_password = 'your_instagram_password'
+        twitter_keys = (
+            'your_twitter_api_key',
+            'your_twitter_api_secret',
+            'your_twitter_access_token',
+            'your_twitter_access_token_secret'
+        )
+        tiktok_credentials = 'your_tiktok_credentials'  # Add TikTok credentials (or cookies/login method)
+
+        # Initialize the CampaignManager with credentials
+        manager = CampaignManager(
+            facebook_token, instagram_username, instagram_password, twitter_keys, tiktok_credentials
+        )
+
+        # Create the campaign in the database
         campaign = CrossPlatformCampaign.objects.create(
             name=name,
             description=description,
@@ -609,11 +635,37 @@ def create_campaign(request):
             end_date=end_date,
         )
 
+        # Add the selected platforms to the campaign
         for platform_id in selected_platforms:
             platform = get_object_or_404(Platform, id=platform_id)
             campaign.platforms.add(platform)
 
         campaign.save()
+
+        # Attempt to post to the selected platforms
+        try:
+            for platform_id in selected_platforms:
+                platform = get_object_or_404(Platform, id=platform_id)
+
+                if platform.name.lower() == 'facebook':
+                    manager.post_to_facebook(message)
+                elif platform.name.lower() == 'instagram':
+                    if not image_path:
+                        return JsonResponse({'status': 'error', 'message': 'Image is required for Instagram posts'})
+                    manager.post_to_instagram(message, image_path.temporary_file_path())  # Access temporary file path
+                elif platform.name.lower() == 'twitter':
+                    manager.post_to_twitter(message)
+                elif platform.name.lower() == 'tiktok':
+                    if not video_path:
+                        return JsonResponse({'status': 'error', 'message': 'Video is required for TikTok posts'})
+                    manager.post_to_tiktok(message, video_path.temporary_file_path())  # Access temporary file path
+                else:
+                    return JsonResponse({'status': 'error', 'message': f'Invalid platform: {platform.name}'})
+
+            return JsonResponse({'status': 'success', 'message': f'Campaign and ads successfully posted to selected platforms.'})
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f'Failed to post ad: {str(e)}'})
 
     return render(request, 'create_campaign.html', {'platforms': platforms})
 

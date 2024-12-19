@@ -1,7 +1,9 @@
 <h1>Create a New Campaign</h1>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    
+    <!-- Campaign Details -->
     <label for="name">Campaign Name:</label>
     <input type="text" id="name" name="name" required><br>
 
@@ -14,11 +16,22 @@
     <label for="end_date">End Date:</label>
     <input type="datetime-local" id="end_date" name="end_date" required><br>
 
+    <!-- Select Platforms -->
     <label for="platforms">Select Platforms:</label><br>
     {% for platform in platforms %}
         <input type="checkbox" id="platform_{{ platform.id }}" name="platforms" value="{{ platform.id }}">
         <label for="platform_{{ platform.id }}">{{ platform.name }}</label><br>
     {% endfor %}
-    
+
+    <!-- Media Files (Instagram Image and TikTok Video) -->
+    <label for="message">Ad Message:</label>
+    <textarea id="message" name="message" required></textarea><br>
+
+    <label for="image_path">Instagram Image:</label>
+    <input type="file" id="image_path" name="image_path"><br>
+
+    <label for="video_path">TikTok Video:</label>
+    <input type="file" id="video_path" name="video_path"><br>
+
     <button type="submit">Create Campaign</button>
 </form>
