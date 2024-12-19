@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -556,3 +556,17 @@ def manage_social_media_accounts(request):
         form = SocialMediaAccountForm()
 
     return render(request, 'manage_social_media_accounts.html', {'accounts': accounts, 'form': form})
+
+def engagement_insights(request):
+    user = request.user
+    posts = SocialMediaPost.objects.filter(account__user=user)
+
+    engagement_data = []
+    for post in posts:
+        engagement = EngagementMetric.objects.get(post=post)
+        engagement_data.append({
+            'post': post,
+            'engagement': engagement
+        })
+
+    return render(request, 'engagement_insights.html', {'engagement_data': engagement_data})

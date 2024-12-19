@@ -243,3 +243,24 @@ class ContentRecommendation(models.Model):
 
     def __str__(self):
         return f"Recommendation for {self.user.username}: {self.recommended_content.campaign_name}"
+
+from django.db import models
+
+class SocialMediaPost(models.Model):
+    account = models.ForeignKey(SocialMediaAccount, on_delete=models.CASCADE)
+    post_content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    post_url = models.URLField()
+
+    def __str__(self):
+        return f"Post for {self.account.platform_username} on {self.created_at}"
+
+class EngagementMetric(models.Model):
+    post = models.OneToOneField(SocialMediaPost, on_delete=models.CASCADE)
+    likes = models.IntegerField(default=0)
+    comments = models.IntegerField(default=0)
+    shares = models.IntegerField(default=0)
+    reach = models.IntegerField(default=0)  # Reach refers to how many users saw the post
+
+    def __str__(self):
+        return f"Engagement for {self.post} - Likes: {self.likes}, Comments: {self.comments}, Shares: {self.shares}, Reach: {self.reach}"

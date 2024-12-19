@@ -34,5 +34,6 @@ urlpatterns = [
     path('social_media_accounts/', views.social_media_accounts, name='social_media_accounts'),
     path('engagement_insights/<int:account_id>/', views.view_engagement_insights, name='view_engagement_insights'),
     path('schedule_post/<int:account_id>/', views.schedule_post, name='schedule_post'),
+    path('engagement-insights/', views.engagement_insights, name='engagement_insights'),
 ]
 
