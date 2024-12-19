@@ -65,16 +65,6 @@ class SocialMediaAccount(models.Model):
     def __str__(self):
         return f"{self.get_platform_display()} account for {self.user.username}"
 
-class SocialMediaAccount(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    platform = models.ForeignKey(SocialMediaPlatform, on_delete=models.CASCADE)
-    account_name = models.CharField(max_length=100)
-    access_token = models.TextField()  # Token for API authentication
-    connected_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.account_name} on {self.platform.name}"
-
 class AdCampaign(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
