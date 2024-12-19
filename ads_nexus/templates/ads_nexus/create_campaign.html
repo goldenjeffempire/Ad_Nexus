@@ -1,0 +1,24 @@
+<h1>Create a New Campaign</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="name">Campaign Name:</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required></textarea><br>
+
+    <label for="start_date">Start Date:</label>
+    <input type="datetime-local" id="start_date" name="start_date" required><br>
+
+    <label for="end_date">End Date:</label>
+    <input type="datetime-local" id="end_date" name="end_date" required><br>
+
+    <label for="platforms">Select Platforms:</label><br>
+    {% for platform in platforms %}
+        <input type="checkbox" id="platform_{{ platform.id }}" name="platforms" value="{{ platform.id }}">
+        <label for="platform_{{ platform.id }}">{{ platform.name }}</label><br>
+    {% endfor %}
+    
+    <button type="submit">Create Campaign</button>
+</form>

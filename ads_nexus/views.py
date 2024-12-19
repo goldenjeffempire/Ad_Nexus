@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric, AdPerformanceSimulation
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric, AdPerformanceSimulation, CrossPlatformCampaign, Platform
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -591,3 +591,32 @@ def performance_simulation(request):
             })
 
     return render(request, 'performance_simulation.html', {'performance_data': performance_data})
+
+def create_campaign(request):
+    platforms = Platform.objects.all()
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        selected_platforms = request.POST.getlist('platforms')
+
+        campaign = CrossPlatformCampaign.objects.create(
+            name=name,
+            description=description,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        for platform_id in selected_platforms:
+            platform = get_object_or_404(Platform, id=platform_id)
+            campaign.platforms.add(platform)
+
+        campaign.save()
+
+    return render(request, 'create_campaign.html', {'platforms': platforms})
+
+def view_campaigns(request):
+    campaigns = CrossPlatformCampaign.objects.all()
+    return render(request, 'view_campaigns.html', {'campaigns': campaigns})

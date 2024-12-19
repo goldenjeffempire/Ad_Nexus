@@ -1,0 +1,20 @@
+<h1>All Campaigns</h1>
+
+{% if campaigns %}
+    <ul>
+    {% for campaign in campaigns %}
+        <li>
+            <strong>{{ campaign.name }}</strong> - Status: {{ campaign.status }}<br>
+            <strong>Platforms:</strong> 
+            {% for platform in campaign.platforms.all %}
+                {{ platform.name }}
+            {% endfor %}
+            <br>
+            <strong>Start Date:</strong> {{ campaign.start_date }}<br>
+            <strong>End Date:</strong> {{ campaign.end_date }}<br>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No campaigns available.</p>
+{% endif %}

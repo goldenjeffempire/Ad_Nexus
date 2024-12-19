@@ -271,3 +271,21 @@ class AdPerformanceSimulation(models.Model):
 
     def __str__(self):
         return f"Ad Performance for {self.post} - Estimated ROI: {self.estimated_roi}%"
+
+class Platform(models.Model):
+    name = models.CharField(max_length=100)
+    api_url = models.URLField()
+
+    def __str__(self):
+        return self.name
+
+class CrossPlatformCampaign(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField()
+    platforms = models.ManyToManyField(Platform, related_name='campaigns')
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    status = models.CharField(max_length=50, choices=[('pending', 'Pending'), ('active', 'Active'), ('completed', 'Completed')], default='pending')
+
+    def __str__(self):
+        return self.name
