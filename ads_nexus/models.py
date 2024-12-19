@@ -49,6 +49,23 @@ class SocialMediaPlatform(models.Model):
         return self.name
 
 class SocialMediaAccount(models.Model):
+    PLATFORM_CHOICES = [
+        ('FB', 'Facebook'),
+        ('IG', 'Instagram'),
+        ('TW', 'Twitter'),
+        ('LN', 'LinkedIn'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    platform = models.CharField(max_length=2, choices=PLATFORM_CHOICES)
+    platform_username = models.CharField(max_length=255)
+    access_token = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.get_platform_display()} account for {self.user.username}"
+
+class SocialMediaAccount(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     platform = models.ForeignKey(SocialMediaPlatform, on_delete=models.CASCADE)
     account_name = models.CharField(max_length=100)

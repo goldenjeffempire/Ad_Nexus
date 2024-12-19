@@ -31,7 +31,7 @@ class SchedulePostForm(forms.Form):
 class SocialMediaAccountForm(forms.ModelForm):
     class Meta:
         model = SocialMediaAccount
-        fields = ['platform_name', 'account_name', 'access_token']
+        fields = ['platform_name', 'account_name', 'access_token', 'is_active']
 
 class ScheduledPostForm(forms.ModelForm):
     class Meta:

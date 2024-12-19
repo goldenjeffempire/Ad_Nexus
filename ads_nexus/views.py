@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation
+from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
 from .ai_tools import generate_creative_content
@@ -426,6 +426,33 @@ def ad_performance(request, campaign_id):
     # Simulate performance data (this could be triggered periodically in production)
     ad_performance = simulate_ad_performance(ad_campaign)
 
+def manage_social_media_accounts(request):
+    user = request.user
+    accounts = SocialMediaAccount.objects.filter(user=user)
+
+    if request.method == 'POST':
+        form = SocialMediaAccountForm(request.POST)
+        if form.is_valid():
+            form.instance.user = user
+            form.save()
+            return redirect('manage_social_media_accounts')
+    else:
+        form = SocialMediaAccountForm()
+
+    return render(request, 'manage_social_media_accounts.html', {'accounts': accounts, 'form': form})def manage_social_media_accounts(request):
+    user = request.user
+    accounts = SocialMediaAccount.objects.filter(user=user)
+
+    if request.method == 'POST':
+        form = SocialMediaAccountForm(request.POST)
+        if form.is_valid():
+            form.instance.user = user
+            form.save()
+            return redirect('manage_social_media_accounts')
+    else:
+        form = SocialMediaAccountForm()
+
+    return render(request, 'manage_social_media_accounts.html', {'accounts': accounts, 'form': form})
     return render(request, 'ad_performance.html', {
         'ad_campaign': ad_campaign,
         'ad_performance': ad_performance
@@ -514,3 +541,18 @@ def content_recommendations(request):
     recommendations = generate_recommendations(user)
 
     return render(request, 'content_recommendations.html', {'recommendations': recommendations})
+
+def manage_social_media_accounts(request):
+    user = request.user
+    accounts = SocialMediaAccount.objects.filter(user=user)
+
+    if request.method == 'POST':
+        form = SocialMediaAccountForm(request.POST)
+        if form.is_valid():
+            form.instance.user = user
+            form.save()
+            return redirect('manage_social_media_accounts')
+    else:
+        form = SocialMediaAccountForm()
+
+    return render(request, 'manage_social_media_accounts.html', {'accounts': accounts, 'form': form})

@@ -1,0 +1,16 @@
+<h1>Manage Your Social Media Accounts</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Account</button>
+</form>
+
+<h2>Your Linked Accounts</h2>
+<ul>
+    {% for account in accounts %}
+        <li>
+            {{ account.get_platform_display }}: {{ account.platform_username }} (Active: {{ account.is_active }})
+        </li>
+    {% endfor %}
+</ul>
