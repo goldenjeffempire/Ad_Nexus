@@ -408,6 +408,17 @@ def ad_detail(request, ad_id):
         'recommended_ads': recommended_ads
     })
 
+@csrf_exempt
+def get_recommendations(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+
+        # Get top N recommended ads for the user
+        recommended_ads = recommend_ads(user_id)
+
+        return JsonResponse({'recommended_ads': recommended_ads})
+
 def analytics(request):
     analytics_data = SocialShareAnalytics.objects.all()
     return render(request, 'ads_nexus/analytics.html', {'analytics_data': analytics_data})

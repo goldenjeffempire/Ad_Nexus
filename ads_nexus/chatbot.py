@@ -94,7 +94,7 @@ credentials = service_account.Credentials.from_service_account_file(
 # Initialize Dialogflow session client
 def detect_intent(text_input, session_id="12345"):
     session_client = dialogflow.SessionsClient(credentials=credentials)
-    session = session_client.session_path('your-project-id', session_id)
+    session = session_client.session_path('jefferyonomeemuodafevware-ve99', session_id)
 
     # Create the text input for the query
     text_input = dialogflow.TextInput(text=text_input, language_code="en")

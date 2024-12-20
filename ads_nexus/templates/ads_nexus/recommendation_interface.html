@@ -1,0 +1,28 @@
+<!-- recommendation_interface.html -->
+<div class="recommendation-container">
+    <h3>Recommended Ads for You</h3>
+    <ul id="recommended-ads"></ul>
+</div>
+
+<script>
+    function getRecommendations(userId) {
+        fetch('/get_recommendations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const adsList = document.getElementById('recommended-ads');
+            adsList.innerHTML = '';
+            data.recommended_ads.forEach(ad => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Ad ID: ${ad[0]}, Predicted Interaction: ${ad[1]}`;
+                adsList.appendChild(listItem);
+            });
+        });
+    }
+
+    // Call this function with the user ID to get recommendations
+    getRecommendations(1); // Example user ID
+</script>
