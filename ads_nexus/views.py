@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+UserSocialAuthfrom django.shortcuts import render, redirect, get_object_or_404
 from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric, AdPerformanceSimulation, CrossPlatformCampaign, Platform, SocialMediaAPI
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
@@ -24,7 +24,7 @@ from .chatbot_handler import get_chatbot_response
 import json
 from .ad_targeting import dynamic_ad_targeting
 from django.contrib.auth.decorators import login_required
-from .performance_simulator import simulate_ad_performance
+from .performance_simulator import simulate_ad_performance, PerformanceSimulator
 from .ad_integration import create_ad_on_platform
 from .chatbot_service import get_chatbot_response
 from .campaign_management import CampaignManager
@@ -743,7 +743,7 @@ def view_api_settings(request):
     return render(request, 'view_api_settings.html', {'api_settings': api_settings})
 
 def create_social_media_ad(request):
-    if request.method == 'POST':
+    if requestUserSocialAuth.method == 'POST':
         # Fetch ad details from the request
         ad_params = request.POST.get('ad_params')
         tweet_text = request.POST.get('tweet_text')
@@ -790,3 +790,15 @@ def create_ad_content(request):
         return render(request, 'ad_content_result.html', {'ad_content': ad_content})
 
     return render(request, 'create_ad_content.html')
+
+def simulate_ad_performance(request):
+    if request.method == 'POST':
+        budget = float(request.POST.get('budget'))
+        audience_size = int(request.POST.get('audience_size'))
+
+        simulator = PerformanceSimulator(budget, audience_size)
+        performance = simulator.simulate_performance()
+
+        return render(request, 'ad_performance_result.html', {'performance': performance})
+
+    return render(request, 'simulate_ad_performance.html')

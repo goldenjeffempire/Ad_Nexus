@@ -22,3 +22,27 @@ def simulate_ad_performance(ad_campaign):
     ad_performance.save()
 
     return ad_performance
+
+class PerformanceSimulator:
+    def __init__(self, budget, audience_size, ctr_base=0.05, conversion_base=0.1):
+        self.budget = budget
+        self.audience_size = audience_size
+        self.ctr_base = ctr_base  # Base click-through rate
+        self.conversion_base = conversion_base  # Base conversion rate
+
+    def simulate_performance(self):
+        # Simulate CTR: Higher budget and audience size increases CTR
+        ctr = self.ctr_base + (self.budget * 0.0005) + (self.audience_size * 0.0001)
+        ctr = min(ctr, 0.2)  # Limit CTR to a maximum of 20%
+
+        # Simulate Conversion Rate: Higher CTR leads to higher conversion rate
+        conversion_rate = self.conversion_base + (ctr * 0.2)
+
+        # Simulate Impressions: Based on budget and audience size
+        impressions = self.budget * 1000 + (self.audience_size * 500)
+
+        return {
+            "CTR": round(ctr * 100, 2),  # Percentage form
+            "Conversion Rate": round(conversion_rate * 100, 2),
+            "Impressions": impressions
+        }

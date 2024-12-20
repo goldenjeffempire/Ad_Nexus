@@ -1,0 +1,13 @@
+<!-- simulate_ad_performance.html -->
+<h1>Simulate Ad Performance</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="budget">Ad Budget (in USD):</label>
+    <input type="number" id="budget" name="budget" required>
+
+    <label for="audience_size">Target Audience Size:</label>
+    <input type="number" id="audience_size" name="audience_size" required>
+
+    <button type="submit">Simulate Performance</button>
+</form>
