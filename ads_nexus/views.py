@@ -29,10 +29,12 @@ from .ad_integration import create_ad_on_platform
 from .chatbot_service import get_chatbot_response
 from .campaign_management import CampaignManager
 from .social_media_manager import SocialMediaManager, FacebookAdManager, TwitterAdManager, InstagramAdManager, TikTokAdManager
+from .ai_content_generator import AIAdContentGenerator
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
     recommend_ads(user_profile.id)  # Generate recommendations
+
 
     recommendations = Recommendation.objects.filter(user=user_profile).order_by('-score')
     return render(request, 'ads_nexus/recommendations.html', {'recommendations': recommendations})
@@ -42,6 +44,7 @@ def ad_simulation(request, ad_id):
 
     # Run simulation
     simulation = simulate_ad_performance(ad.id)
+
 
     # Fetch previous simulations for the same ad
     previous_simulations = AdSimulation.objects.filter(ad=ad).order_by('-created_at')
@@ -55,6 +58,7 @@ def ad_simulation(request, ad_id):
 def ai_creativity_booster(request):
     if request.method == "POST":
         # Generate AI-powered content
+
         generated_content = generate_creative_content()
     else:
         generated_content = None
@@ -661,6 +665,7 @@ def create_campaign(request):
         )
         tiktok_credentials = 'your_tiktok_credentials'  # Add TikTok credentials (or cookies/login method)
 
+
         # Initialize the CampaignManager with credentials
         manager = CampaignManager(
             facebook_token, instagram_username, instagram_password, twitter_keys, tiktok_credentials
@@ -678,6 +683,7 @@ def create_campaign(request):
         for platform_id in selected_platforms:
             platform = get_object_or_404(Platform, id=platform_id)
             campaign.platforms.add(platform)
+
 
         campaign.save()
 
@@ -771,3 +777,16 @@ def create_social_media_ad(request):
         return JsonResponse(ad_response)
 
     return render(request, 'create_ad.html')
+
+def create_ad_content(request):
+    if request.method == 'POST':
+        ad_type = request.POST.get('ad_type')
+        product_features = request.POST.get('product_features')
+        target_audience = request.POST.get('target_audience')
+
+        ai_generator = AIAdContentGenerator(api_key="your-openai-api-key")
+        ad_content = ai_generator.generate_content(ad_type, product_features, target_audience)
+
+        return render(request, 'ad_content_result.html', {'ad_content': ad_content})
+
+    return render(request, 'create_ad_content.html')

@@ -1,0 +1,17 @@
+class AIAdContentGenerator:
+    def __init__(self, api_key):
+        self.api_key = api_key
+
+    def generate_content(self, ad_type, product_features, target_audience):
+        prompt = f"Create a {ad_type} ad for a product with the following features: {product_features}. The target audience is {target_audience}. The ad should be engaging, persuasive, and optimized for social media platforms."
+
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=200,
+            n=1,
+            stop=None,
+            temperature=0.7
+        )
+
+        return response.choices[0].text.strip()

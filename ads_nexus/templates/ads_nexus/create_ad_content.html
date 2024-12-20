@@ -1,0 +1,16 @@
+<!-- create_ad_content.html -->
+<h1>Create Ad Content</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="ad_type">Ad Type (Personal/Business):</label>
+    <input type="text" id="ad_type" name="ad_type" required>
+
+    <label for="product_features">Product Features:</label>
+    <textarea id="product_features" name="product_features" required></textarea>
+
+    <label for="target_audience">Target Audience:</label>
+    <input type="text" id="target_audience" name="target_audience" required>
+
+    <button type="submit">Generate Ad Content</button>
+</form>
