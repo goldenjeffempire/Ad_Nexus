@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        section {
+            margin: 2rem;
+        }
+
+        h2 {
+            background-color: #ddd;
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-top: 1.5rem;
+        }
+
+        .performance-table {
+            width: 100%;
+            margin-top: 1rem;
+            border-collapse: collapse;
+        }
+
+        .performance-table th, .performance-table td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .performance-table th {
+            background-color: #f2f2f2;
+        }
+
+        .performance-table td {
+            background-color: #fff;
+        }
+
+        .platform-section {
+            margin-bottom: 2rem;
+        }
+
+        .platform-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Analytics Dashboard</h1>
+    </header>
+
+    <section class="platform-section">
+        <h2>Facebook Ad Performance</h2>
+        <table class="performance-table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Impressions</td>
+                    <td>{{ reports.facebook.impressions }}</td>
+                </tr>
+                <tr>
+                    <td>Clicks</td>
+                    <td>{{ reports.facebook.clicks }}</td>
+                </tr>
+                <tr>
+                    <td>Cost</td>
+                    <td>{{ reports.facebook.spend }}</td>
+                </tr>
+                <tr>
+                    <td>CTR</td>
+                    <td>{{ reports.facebook.ctr }}</td>
+                </tr>
+                <tr>
+                    <td>Conversions</td>
+                    <td>{{ reports.facebook.conversions }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="platform-section">
+        <h2>Instagram Ad Performance</h2>
+        <table class="performance-table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Impressions</td>
+                    <td>{{ reports.instagram.impressions }}</td>
+                </tr>
+                <tr>
+                    <td>Reach</td>
+                    <td>{{ reports.instagram.reach }}</td>
+                </tr>
+                <tr>
+                    <td>Engagement</td>
+                    <td>{{ reports.instagram.engagement }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="platform-section">
+        <h2>Twitter Ad Performance</h2>
+        <table class="performance-table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Impressions</td>
+                    <td>{{ reports.twitter.impressions }}</td>
+                </tr>
+                <tr>
+                    <td>Engagements</td>
+                    <td>{{ reports.twitter.engagements }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</body>
+</html>
