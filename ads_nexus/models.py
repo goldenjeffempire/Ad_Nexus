@@ -73,6 +73,7 @@ class AdCampaign(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
+    audience_size = models.IntegerField()
 
     def __str__(self):
         return self.name
@@ -88,12 +89,14 @@ class AdTargeting(models.Model):
 
 class AdPerformance(models.Model):
     campaign = models.ForeignKey('Campaign', on_delete=models.CASCADE, related_name='performance')
+    date = models.DateField()
     platform = models.CharField(max_length=50)  # e.g., Facebook, Instagram, Twitter, Tiktok, etc.
     impressions = models.IntegerField(default=0)
     clicks = models.IntegerField(default=0)
     conversions = models.IntegerField(default=0)
     engagement_rate = models.FloatField(default=0.0)
     conversion_rate = models.FloatField(default=0.0)
+    revenue = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     ctr = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)  # Click-through rate
     cpc = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Cost per click
     roi = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Return on investment

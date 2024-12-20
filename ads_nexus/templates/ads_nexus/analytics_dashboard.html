@@ -63,6 +63,10 @@
             font-size: 1.2rem;
             margin-bottom: 1rem;
         }
+
+        .campaign-metrics-section {
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -71,6 +75,38 @@
         <h1>Analytics Dashboard</h1>
     </header>
 
+    <!-- Campaign Metrics Section -->
+    <section class="campaign-metrics-section">
+        <h2>Campaign Performance Metrics</h2>
+        <table class="performance-table">
+            <thead>
+                <tr>
+                    <th>Campaign Name</th>
+                    <th>Total Impressions</th>
+                    <th>Total Clicks</th>
+                    <th>Total Conversions</th>
+                    <th>Total Revenue</th>
+                    <th>CTR (%)</th>
+                    <th>Conversion Rate (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in dashboard_data %}
+                    <tr>
+                        <td>{{ data.campaign.name }}</td>
+                        <td>{{ data.total_impressions }}</td>
+                        <td>{{ data.total_clicks }}</td>
+                        <td>{{ data.total_conversions }}</td>
+                        <td>{{ data.total_revenue }}</td>
+                        <td>{{ data.ctr }}</td>
+                        <td>{{ data.conversion_rate }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Facebook Ad Performance Section -->
     <section class="platform-section">
         <h2>Facebook Ad Performance</h2>
         <table class="performance-table">
@@ -105,6 +141,7 @@
         </table>
     </section>
 
+    <!-- Instagram Ad Performance Section -->
     <section class="platform-section">
         <h2>Instagram Ad Performance</h2>
         <table class="performance-table">
@@ -131,6 +168,7 @@
         </table>
     </section>
 
+    <!-- Twitter Ad Performance Section -->
     <section class="platform-section">
         <h2>Twitter Ad Performance</h2>
         <table class="performance-table">
@@ -148,6 +186,41 @@
                 <tr>
                     <td>Engagements</td>
                     <td>{{ reports.twitter.engagements }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- TikTok Ad Performance Section -->
+    <section class="platform-section">
+        <h2>TikTok Ad Performance</h2>
+        <table class="performance-table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Impressions</td>
+                    <td>{{ reports.tiktok.impressions }}</td>
+                </tr>
+                <tr>
+                    <td>Clicks</td>
+                    <td>{{ reports.tiktok.clicks }}</td>
+                </tr>
+                <tr>
+                    <td>Cost</td>
+                    <td>{{ reports.tiktok.spend }}</td>
+                </tr>
+                <tr>
+                    <td>CTR</td>
+                    <td>{{ reports.tiktok.ctr }}</td>
+                </tr>
+                <tr>
+                    <td>Conversions</td>
+                    <td>{{ reports.tiktok.conversions }}</td>
                 </tr>
             </tbody>
         </table>

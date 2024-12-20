@@ -1,4 +1,4 @@
-UserSocialAuthfrom django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Recommendation, Ad, AdSimulation, SocialMediaAccount, SocialMediaPlatform, AdCampaign, AdTargeting, AdPerformance, SocialShareAnalytics, UserDemographics, UserBehavior, AdPlatform, EngagementInsight, ScheduledPost, AdAnalytics, ContentRecommendation, SocialMediaAccount, SocialMediaPost, EngageMetric, AdPerformanceSimulation, CrossPlatformCampaign, Platform, SocialMediaAPI
 from .recommendation_engine import recommend_ads
 from .simulation_engine import simulate_ad_performance
@@ -802,3 +802,29 @@ def simulate_ad_performance(request):
         return render(request, 'ad_performance_result.html', {'performance': performance})
 
     return render(request, 'simulate_ad_performance.html')
+
+def analytics_dashboard(request):
+    campaigns = AdCampaign.objects.all()
+
+    dashboard_data = []
+
+    for campaign in campaigns:
+        performance = AdPerformance.objects.filter(campaign=campaign)
+        total_impressions = sum(p.impressions for p in performance)
+        total_clicks = sum(p.clicks for p in performance)
+        total_conversions = sum(p.conversions for p in performance)
+        total_revenue = sum(p.revenue for p in performance)
+        ctr = (total_clicks / total_impressions) * 100 if total_impressions > 0 else 0
+        conversion_rate = (total_conversions / total_clicks) * 100 if total_clicks > 0 else 0
+
+        dashboard_data.append({
+            'campaign': campaign,
+            'total_impressions': total_impressions,
+            'total_clicks': total_clicks,
+            'total_conversions': total_conversions,
+            'total_revenue': total_revenue,
+            'ctr': round(ctr, 2),
+            'conversion_rate': round(conversion_rate, 2)
+        })
+
+    return render(request, 'analytics_dashboard.html', {'dashboard_data': dashboard_data})
