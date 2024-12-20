@@ -28,6 +28,7 @@ from .performance_simulator import simulate_ad_performance
 from .ad_integration import create_ad_on_platform
 from .chatbot_service import get_chatbot_response
 from .campaign_management import CampaignManager
+from .social_media_manager import SocialMediaManager, FacebookAdManager, TwitterAdManager, InstagramAdManager, TikTokAdManager
 
 def ad_recommendations(request):
     user_profile = request.user.userprofile  # Assumes user is logged in
@@ -526,6 +527,7 @@ def view_engagement_insights(request, account_id):
 
 def schedule_post(request, account_id):
     account = SocialMediaAccount.objects.get(id=account_id)
+
     if request.method == 'POST':
         form = ScheduledPostForm(request.POST)
         if form.is_valid():
@@ -734,3 +736,38 @@ def view_api_settings(request):
     api_settings = SocialMediaAPI.objects.all()
     return render(request, 'view_api_settings.html', {'api_settings': api_settings})
 
+def create_social_media_ad(request):
+    if request.method == 'POST':
+        # Fetch ad details from the request
+        ad_params = request.POST.get('ad_params')
+        tweet_text = request.POST.get('tweet_text')
+        instagram_image_url = request.POST.get('instagram_image_url')
+        instagram_caption = request.POST.get('instagram_caption')
+        tiktok_ad_params = request.POST.get('tiktok_ad_params')
+
+        # Initialize platform managers with credentials (example)
+        facebook_manager = FacebookAdManager(access_token='FB_ACCESS_TOKEN', app_id='FB_APP_ID', app_secret='FB_APP_SECRET')
+        twitter_manager = TwitterAdManager(api_key='TWITTER_API_KEY', api_secret_key='TWITTER_API_SECRET_KEY', access_token='TWITTER_ACCESS_TOKEN', access_token_secret='TWITTER_ACCESS_TOKEN_SECRET')
+        instagram_manager = InstagramAdManager(access_token='INSTAGRAM_ACCESS_TOKEN', user_id='INSTAGRAM_USER_ID')
+        tiktok_manager = TikTokAdManager(access_token='TIKTOK_ACCESS_TOKEN', app_id='TIKTOK_APP_ID')
+
+        # Initialize Social Media Manager
+        social_media_manager = SocialMediaManager(
+            facebook_manager,
+            twitter_manager,
+            instagram_manager,
+            tiktok_manager
+        )
+
+        # Create the ad across platforms
+        ad_response = social_media_manager.create_ad_on_all_platforms(
+            ad_params,
+            tweet_text,
+            instagram_image_url,
+            instagram_caption,
+            tiktok_ad_params
+        )
+
+        return JsonResponse(ad_response)
+
+    return render(request, 'create_ad.html')
