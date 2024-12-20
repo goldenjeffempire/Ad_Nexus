@@ -10,7 +10,7 @@ from .marketing_coach import get_marketing_advice
 from .recommendation import recommend
 from .performance_simulation import simulate_ad_performance, simulate_campaign_performance
 from .creativity_boost import boost_creativity
-from .chatbot import get_chatbot_response, AIChatbot, log_conversation
+from .chatbot import get_chatbot_response, AIChatbot, log_conversation, detect_intent
 from .facebook_integration import create_facebook_campaign
 from .google_ads_integration import create_google_ads_campaign
 from .facebook_ads import FacebookAdManager
@@ -291,6 +291,18 @@ def chatbot_interface(request):
         'user_message': user_message,
         'chatbot_response': chatbot_response
     })
+
+@csrf_exempt
+def send_message(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_message = data.get('message')
+
+        # Get response from Dialogflow
+        response_message = detect_intent(user_message)
+
+        # Return the response back to the frontend
+        return JsonResponse({'reply': response_message})
 
 # Example access token and ad account ID (replace with actual values)
 ACCESS_TOKEN = 'your_facebook_access_token'
@@ -828,3 +840,4 @@ def analytics_dashboard(request):
         })
 
     return render(request, 'analytics_dashboard.html', {'dashboard_data': dashboard_data})
+

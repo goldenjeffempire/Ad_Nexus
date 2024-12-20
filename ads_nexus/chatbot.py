@@ -79,3 +79,27 @@ class AIChatbot:
         log_conversation(user, user_message, chatbot_response)
 
         return chatbot_response
+
+
+# chatbot.py
+import os
+from google.cloud import dialogflow_v2 as dialogflow
+from google.oauth2 import service_account
+
+# Load credentials from the JSON file
+credentials = service_account.Credentials.from_service_account_file(
+    'path_to_your_service_account_file.json'
+)
+
+# Initialize Dialogflow session client
+def detect_intent(text_input, session_id="12345"):
+    session_client = dialogflow.SessionsClient(credentials=credentials)
+    session = session_client.session_path('your-project-id', session_id)
+
+    # Create the text input for the query
+    text_input = dialogflow.TextInput(text=text_input, language_code="en")
+    query_input = dialogflow.QueryInput(text=text_input)
+
+    # Detect intent
+    response = session_client.detect_intent(session=session, query_input=query_input)
+    return response.query_result.fulfillment_text
